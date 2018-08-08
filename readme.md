@@ -12,13 +12,14 @@ Playbooks express configurations, deployment, and orchestration in Ansible. The 
 
 See more information: https://docs.ansible.com/ansible/latest/user_guide/playbooks.html
 
-Centreon Poller Playbook
-------------------------
-
-Compatible:
+Compatibility
+-------------
 
 * CentOS 6
 * CentOS 7
+
+Centreon Poller Playbook
+------------------------
 
 Tasks:
 
@@ -32,11 +33,6 @@ Tasks:
 
 Centreon Web Playbook with MySQL Server
 ---------------------------------------
-
-Compatible:
-
-* CentOS 6
-* CentOS 7
 
 Tasks:
 
