@@ -12,7 +12,5 @@ galaxy_info:
     - 7
   galaxy_tags:
     - centreon
-    - centreon-web
-    - centreon-poller
     - monitoring
 dependencies: []
