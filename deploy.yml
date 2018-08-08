@@ -5,10 +5,10 @@
   remote_user: root
 
   roles:
-    - common
-    - role: mariadb-server
+    - "lgcosta.centreon_ansible/roles/common"
+    - role: "lgcosta.centreon_ansible/roles/mariadb-server"
       mysql_password: "p4ssw0rd"
-    - role: centreon-web
+    - role: "lgcosta.centreon_ansible/roles/centreon-web"
       php_timezone: "Europe/Paris"
 
 - name: Centreon-Poller
@@ -16,5 +16,5 @@
   remote_user: root
 
   roles:
-    - common
-    - centreon-poller
+    - "lgcosta.centreon_ansible/roles/common"
+    - "lgcosta.centreon_ansible/roles/centreon-poller"

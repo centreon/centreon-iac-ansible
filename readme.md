@@ -63,6 +63,11 @@ The `hosts` file with the nodes:
 
 Set group name of hosts, change the first key `hosts` in file.
 
+Install playbook using Ansible Galaxy command:
+```
+ansible-galaxy install lgcosta.centreon_ansible
+```
+
 Create a file with the playbooks (eg: `deploy.yaml`) with content bellow:
 ```yaml
 ---
@@ -72,10 +77,10 @@ Create a file with the playbooks (eg: `deploy.yaml`) with content bellow:
   remote_user: root
 
   roles:
-    - common
-    - role: mariadb-server
+    - "lgcosta.centreon_ansible/roles/common"
+    - role: "lgcosta.centreon_ansible/roles/mariadb-server"
       mysql_password: "p4ssw0rd"
-    - role: centreon-web
+    - role: "lgcosta.centreon_ansible/roles/centreon-web"
       php_timezone: "Europe/Paris"
 
 - name: Centreon-Poller
@@ -83,8 +88,9 @@ Create a file with the playbooks (eg: `deploy.yaml`) with content bellow:
   remote_user: root
 
   roles:
-    - common
-    - centreon-poller
+    - "lgcosta.centreon_ansible/roles/common"
+    - "lgcosta.centreon_ansible/roles/centreon-poller"
+
 ```
 
 Set variables `mysql_password` and `php_timezone` with values from you environment.
