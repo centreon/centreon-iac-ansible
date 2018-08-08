@@ -18,19 +18,6 @@ Compatibility
 * CentOS 6
 * CentOS 7
 
-Centreon Poller Playbook
-------------------------
-
-Tasks:
-
-* Disable selinux
-* Add Centreon Open Source repository
-* Import keys from repository
-* Install packages to Centreon poller
-* Set authorized previously created keys
-* Enable and try start centengine service
-
-
 Centreon Web Playbook with MySQL Server
 ---------------------------------------
 
@@ -46,6 +33,17 @@ Tasks:
 * Start and enable services necessaries
 * Setup firewall rules
 
+Centreon Poller Playbook
+------------------------
+
+Tasks:
+
+* Disable selinux
+* Add Centreon Open Source repository
+* Import keys from repository
+* Install packages to Centreon poller
+* Set authorized previously created keys (copy from Centreon-Web)
+* Enable and try start centengine service
 
 Example
 =======
