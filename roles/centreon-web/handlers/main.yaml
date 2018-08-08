@@ -1,0 +1,12 @@
+---
+  - name: reload systemctl
+    shell: systemctl daemon-reload
+    listen: "reload systemctl daemons"
+
+  - name: restart iptables (centos6)
+    service: name=iptables state=restarted
+    listen: "restart iptables"
+    
+  - name: restart httpd
+    service: name=httpd state=restarted
+    listen: "restart httpd"

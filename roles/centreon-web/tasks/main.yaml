@@ -1,0 +1,68 @@
+---
+  - name: install centreon web and requirements
+    yum:
+      name:
+        - centreon-base-config-centreon-engine
+        - centreon
+      state: latest
+
+  - name: php timezone configuration
+    blockinfile:
+      create: yes
+      path: /etc/php.d/php-timezone.ini
+      content: |
+        date.timezone = {{ php_timezone }}
+
+  - name: Generate SSH keys
+    shell: ssh-keygen -t rsa -f /var/spool/centreon/.ssh/id_rsa -q -N ""
+    args:
+      creates: /var/spool/centreon/.ssh/id_rsa
+    become: yes
+    become_user: centreon
+
+  - name: Grab public ssh to a variable
+    shell: cat /var/spool/centreon/.ssh/id_rsa.pub
+    register: ssh_centreonweb_key
+  - set_fact: centreonweb_rsa="{{ ssh_centreonweb_key.stdout }}"
+
+  - name: httpd service
+    service: name=httpd enabled=yes state=started
+  - name: snmpd service
+    service: name=snmpd enabled=yes state=started
+  - name: snmpd service
+    service: name=snmpd enabled=yes state=started
+  - name: centcore service
+    service: name=centcore enabled=yes
+  - name: centengine service
+    service: name=centengine enabled=yes
+  - name: cbd service
+    service: name=cbd enabled=yes
+  - name: Enable firewalld
+    service: name=firewalld state=started enabled=yes
+    when: ansible_distribution_major_version == "7"
+
+  - name: Firewall allow http/broker (centos6)
+    blockinfile:
+      path: /etc/sysconfig/iptables
+      insertafter: "-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT"
+      content: |
+        -A INPUT -p tcp --dport 80 -j ACCEPT
+        -A INPUT -p tcp --dport 5669 -j ACCEPT
+    notify: "restart iptables"
+    when: ansible_distribution_major_version == "6"
+
+  - name: Firewall allow http (centos7)
+    firewalld:
+      service: http
+      permanent: true
+      state: enabled
+      immediate: yes
+    when: ansible_distribution_major_version == "7"
+
+  - name: Firewall allow broker (centos7)
+    firewalld:
+      port: 5669/tcp
+      permanent: true
+      state: enabled
+      immediate: yes
+    when: ansible_distribution_major_version == "7"

@@ -1,0 +1,27 @@
+---
+  - name: Install MariaDB Server
+    yum:
+      name:
+        - MySQL-python
+        - MariaDB-server
+      state: latest
+
+  - name: Add LimitNOFILE=32000 systemd
+    blockinfile:
+      create: yes
+      path: /etc/systemd/system/mariadb.service.d/limits.conf
+      content: |
+        [Service]
+        LimitNOFILE=32000
+    notify: "reload systemctl daemons"
+    when: ansible_distribution_major_version == "7"
+
+  - name: mysql service
+    service: name=mysql enabled=yes state=started
+
+  - name: Set MariaDB root password
+    command: mysqladmin -u root password "{{ mysql_password }}"
+    failed_when: false
+    register: set_password
+    changed_when: "set_password.rc == 0"
+    ignore_errors: yes

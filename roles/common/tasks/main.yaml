@@ -1,0 +1,38 @@
+---
+  - name: Exit if not is a CentOS
+    fail: msg="Compatible only with CentOS version 6 or 7"
+    when: ansible_distribution != "CentOS" and (ansible_distribution_major_version == "6" or ansible_distribution_major_version == "7")
+
+  - name: add package necessary to manage selinux (if enabled)
+    yum:
+      name: libselinux-python
+      state: present
+  - name: disable selinux (default)
+    selinux:
+      state: disabled
+
+  - name: add repo centreon centos6
+    get_url:
+      url: http://yum.centreon.com/standard/3.4/el6/stable/centreon-stable.repo
+      dest: /etc/yum.repos.d
+      mode: 0644
+    when: ansible_distribution_major_version == "6"
+
+  - name: add repo centreon centos7
+    get_url:
+      url: http://yum.centreon.com/standard/3.4/el7/stable/centreon-stable.repo
+      dest: /etc/yum.repos.d
+      mode: 0644
+    when: ansible_distribution_major_version == "7"
+
+  - name: add rpm key to centreon repository (CentOS6)
+    rpm_key:
+      state: present
+      key: http://yum.centreon.com/standard/3.4/el6/stable/RPM-GPG-KEY-CES
+    when: ansible_distribution_major_version == "6"
+
+  - name: add rpm key to centreon repository (CentOS7)
+    rpm_key:
+      state: present
+      key: http://yum.centreon.com/standard/3.4/el7/stable/RPM-GPG-KEY-CES
+    when: ansible_distribution_major_version == "7"

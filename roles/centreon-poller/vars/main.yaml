@@ -1,0 +1,2 @@
+---
+  centreon_ssh_keyfile: "{{ lookup('file', '/path/of/id_rsa.pub') }}"

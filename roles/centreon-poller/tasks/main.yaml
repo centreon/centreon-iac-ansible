@@ -1,0 +1,18 @@
+---
+  - name: install centreon poller and requirements
+    yum:
+      name: centreon-poller-centreon-engine
+      state: latest
+
+  - name: Set authorized key to use by Centreon web
+    authorized_key:
+      user: centreon
+      state: present
+      # Copy key generate on the Centreon-web
+      key: "{{ hostvars[groups['centreon-web'][0]]['centreonweb_rsa'] }}"
+
+  - name: Enable service centengine and try start
+    service:
+      name: centengine
+      enabled: yes
+      state: started

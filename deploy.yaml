@@ -1,0 +1,20 @@
+---
+
+- name: Centreon-Web
+  hosts: centreon-web
+  remote_user: root
+
+  roles:
+    - common
+    - role: mariadb-server
+      mysql_password: "p4ssw0rd"
+    - role: centreon-web
+      php_timezone: "Europe/Paris"
+
+- name: Centreon-Poller
+  hosts: centreon-poller
+  remote_user: root
+
+  roles:
+    - common
+    - centreon-poller
