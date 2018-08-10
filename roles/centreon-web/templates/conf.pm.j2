@@ -1,0 +1,19 @@
+#############################################
+# File Added by Centreon
+#
+
+$centreon_config = {
+       VarLib => "/var/lib/centreon/",
+       CentreonDir => "/usr/share/centreon/",
+       "centreon_db" => "{{ mysql_centreon_db}}",
+       "centstorage_db" => "{{ mysql_centstorage_db}}",
+       "db_host" => "{{ mysql_centreon_hostname }}:{{ mysql_port }}",
+       "db_user" => "{{ mysql_centreon_username }}",
+       "db_passwd" => "{{ mysql_centreon_password }}"
+};
+
+# Central or Poller ?
+$instance_mode = "central";
+$cmdFile = "/var/lib/centreon-engine/rw/centengine.cmd";
+
+1;
