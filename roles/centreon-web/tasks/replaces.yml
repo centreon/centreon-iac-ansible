@@ -1,0 +1,24 @@
+---
+  - name: Apply macros to sql files (centreon-broker.sql)
+    replace:
+      path: /usr/share/centreon/www/install/var/baseconf/centreon-broker.sql
+      regexp: "{{ item.regexp }}"
+      replace: "{{ item.replace }}"
+      backup: no
+    with_items: "{{ items_replace }}"
+
+  - name: Apply macros to sql files (centreon-engine.sql)
+    replace:
+      path: /usr/share/centreon/www/install/var/baseconf/centreon-engine.sql
+      regexp: "{{ item.regexp }}"
+      replace: "{{ item.replace }}"
+      backup: no
+    with_items: "{{ items_replace }}"
+
+  - name: Apply macros to sql files (insertBaseConf.sql)
+    replace:
+      path: /usr/share/centreon/www/install/insertBaseConf.sql
+      regexp: "{{ item.regexp }}"
+      replace: "{{ item.replace }}"
+      backup: no
+    with_items: "{{ items_replace }}"

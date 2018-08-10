@@ -6,12 +6,15 @@
         - centreon
       state: latest
 
-  - name: php timezone configuration
+  - name: Set PHP timezone configuration
     blockinfile:
       create: yes
       path: /etc/php.d/php-timezone.ini
       content: |
         date.timezone = {{ php_timezone }}
+
+  - name: Check httpd service
+    service: name=httpd enabled=yes state=started
 
   - name: Generate SSH keys
     shell: ssh-keygen -t rsa -f /var/spool/centreon/.ssh/id_rsa -q -N ""
@@ -25,18 +28,80 @@
     register: ssh_centreonweb_key
   - set_fact: centreonweb_rsa="{{ ssh_centreonweb_key.stdout }}"
 
-  - name: httpd service
-    service: name=httpd enabled=yes state=started
-  - name: snmpd service
+  - name: Add right in SNMP
+    shell: |
+      sed -i \
+        -e "/^view.*\.1\.3\.6\.1\.2\.1\.1$/i\
+        view centreon included .1.3.6.1" \
+        -e "/^access.*$/i\
+        access notConfigGroup \"\" any noauth exact centreon none none" \
+        /etc/snmp/snmpd.conf
+
+  - name: Check snmpd service
     service: name=snmpd enabled=yes state=started
-  - name: snmpd service
-    service: name=snmpd enabled=yes state=started
+
+  - name: Add Centreon PHP config file
+    template:
+      src: templates/centreon.conf.php.j2
+      dest: /etc/centreon/centreon.conf.php
+      owner: centreon
+      group: centreon
+      mode: 0644
+
+  - name: Add Centreon Perl config file
+    template:
+      src: templates/conf.pm.j2
+      dest: /etc/centreon/conf.pm
+      owner: centreon
+      group: centreon
+      mode: 0644
+
+  - name: Create install directory
+    file: path=/usr/share/centreon/install state=directory
+
+  - name: Copy sql file to missing tables
+    copy:
+      src: files/missing_tables.sql
+      dest: /usr/share/centreon/install/missing_tables.sql
+      mode: 0644
+
+  - name: Set Centreon admin password
+    replace:
+      path: /usr/share/centreon/www/install/insertBaseConf.sql
+      regexp: '@ADMIN_PASSWORD@'
+      replace: '{{ centreon_admin_password }}'
+      backup: no
+
+  - name: Set Mysql centreon password
+    replace:
+      path: /usr/share/centreon/www/install/insertBaseConf.sql
+      regexp: '$dbpasswd'
+      replace: '{{ mysql_centreon_password }}'
+      backup: no
+
+  - import_tasks: replaces.yml
+
+  - import_tasks: mysql_tasks.yml
+
+  - name: Delete install directories
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - /usr/share/centreon/install
+      - /usr/share/centreon/www/install
+
+  - name: Generate configuration with CLAPI
+    shell: |
+      /usr/share/centreon/bin/centreon -u admin -p {{ centreon_admin_password }} -a POLLERGENERATE -v 1
+      /usr/share/centreon/bin/centreon -u admin -p {{ centreon_admin_password }} -a CFGMOVE -v 1
+
   - name: centcore service
-    service: name=centcore enabled=yes
+    service: name=centcore enabled=yes state=started
   - name: centengine service
-    service: name=centengine enabled=yes
+    service: name=centengine enabled=yes state=started
   - name: cbd service
-    service: name=cbd enabled=yes
+    service: name=cbd enabled=yes state=started
   - name: Enable firewalld
     service: name=firewalld state=started enabled=yes
     when: ansible_distribution_major_version == "7"

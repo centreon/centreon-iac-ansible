@@ -20,7 +20,7 @@
     service: name=mysql enabled=yes state=started
 
   - name: Set MariaDB root password
-    command: mysqladmin -u root password "{{ mysql_password }}"
+    command: mysqladmin -u root password "{{ mysql_root_password }}"
     failed_when: false
     register: set_password
     changed_when: "set_password.rc == 0"
