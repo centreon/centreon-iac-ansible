@@ -56,45 +56,11 @@
       group: centreon
       mode: 0644
 
-  - name: Create install directory
-    file: path=/usr/share/centreon/install state=directory
+  - stat: path=/etc/centreon/ansible_install
+    register: controller_file
 
-  - name: Copy sql file to missing tables
-    copy:
-      src: files/missing_tables.sql
-      dest: /usr/share/centreon/install/missing_tables.sql
-      mode: 0644
-
-  - name: Set Centreon admin password
-    replace:
-      path: /usr/share/centreon/www/install/insertBaseConf.sql
-      regexp: '@ADMIN_PASSWORD@'
-      replace: '{{ centreon_admin_password }}'
-      backup: no
-
-  - name: Set Mysql centreon password
-    replace:
-      path: /usr/share/centreon/www/install/insertBaseConf.sql
-      regexp: '$dbpasswd'
-      replace: '{{ mysql_centreon_password }}'
-      backup: no
-
-  - import_tasks: replaces.yml
-
-  - import_tasks: mysql_tasks.yml
-
-  - name: Delete install directories
-    file:
-      path: "{{ item }}"
-      state: absent
-    with_items:
-      - /usr/share/centreon/install
-      - /usr/share/centreon/www/install
-
-  - name: Generate configuration with CLAPI
-    shell: |
-      /usr/share/centreon/bin/centreon -u admin -p {{ centreon_admin_password }} -a POLLERGENERATE -v 1
-      /usr/share/centreon/bin/centreon -u admin -p {{ centreon_admin_password }} -a CFGMOVE -v 1
+  - import_tasks: do_config.yml
+    when: not controller_file.stat.exists and controller_file.stat.exists is defined
 
   - name: centcore service
     service: name=centcore enabled=yes state=started
