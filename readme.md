@@ -77,19 +77,28 @@ Create a file with the playbooks (eg: `deploy.yaml`) with content bellow:
   remote_user: root
 
   roles:
-    - "lgcosta.centreon_ansible/roles/common"
-    - role: "lgcosta.centreon_ansible/roles/mariadb-server"
-      mysql_password: "p4ssw0rd"
-    - role: "lgcosta.centreon_ansible/roles/centreon-web"
+    - "roles/common"
+    - role: "roles/mariadb-server"
+      mysql_root_password: "p4ssw0rd"
+    - role: "roles/centreon-web"
       php_timezone: "Europe/Paris"
+      mysql_hostname: "localhost"
+      mysql_port: "3306"
+      mysql_root_password: "p4ssw0rd"
+      mysql_centreon_db: "centreon"
+      mysql_centstorage_db: "centreon_storage"
+      mysql_centreon_username: "centreon"
+      mysql_centreon_password: "p4ssw0rd"
+      centreon_admin_password: "p4ssw0rd"
 
 - name: Centreon-Poller
   hosts: centreon-poller
   remote_user: root
 
   roles:
-    - "lgcosta.centreon_ansible/roles/common"
-    - "lgcosta.centreon_ansible/roles/centreon-poller"
+    - "roles/common"
+    - "centreon-poller"
+
 
 ```
 
