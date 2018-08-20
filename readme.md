@@ -97,7 +97,7 @@ Create a file with the playbooks (eg: `deploy.yaml`) with content bellow:
 
   roles:
     - "roles/common"
-    - "centreon-poller"
+    - "roles/centreon-poller"
 
 
 ```
