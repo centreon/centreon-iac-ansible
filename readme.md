@@ -63,7 +63,7 @@ The `hosts` file with the nodes:
 
 Set group name of hosts, change the first key `hosts` in file.
 
-Install playbook using Ansible Galaxy command:
+<del>Install playbook using Ansible Galaxy command</del> (No yet, instead use git clone):
 ```
 ansible-galaxy install lgcosta.centreon_ansible
 ```
