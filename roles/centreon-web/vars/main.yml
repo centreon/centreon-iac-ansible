@@ -41,6 +41,7 @@
     - { regexp: '@DB_HOST@', replace: '{{ mysql_hostname }}'}
     - { regexp: '@DB_PORT@', replace: '{{ mysql_port }}'}
     - { regexp: '@DB_USER@', replace: '{{ mysql_centreon_username }}'}
+    - { regexp: '@DB_PASS@', replace: '{{ mysql_centreon_password }}'}
     - { regexp: '@UTILS_DB@', replace: 'centreon_status'}
     - { regexp: '@NDOMOD_BINARY@', replace: '/usr/lib64/nagios/ndomod.o'}
     - { regexp: '@CENTREON_ENGINE_STATS_BINARY@', replace: '/usr/sbin/centenginestats'}
