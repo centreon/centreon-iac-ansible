@@ -9,6 +9,8 @@
   - name: Set PHP timezone configuration
     blockinfile:
       create: yes
+      marker_begin: '; BEGIN ANSIBLE MANAGED BLOCK'
+      marker_end: '; END ANSIBLE MANAGED BLOCK'
       path: /etc/php.d/php-timezone.ini
       content: |
         date.timezone = {{ php_timezone }}

@@ -34,9 +34,10 @@
     - { regexp: '@CENTREON_ENGINE_CONNECTORS@', replace: '/usr/lib64/centreon-connector'}
     - { regexp: '@CENTREON_ENGINE_LIB@', replace: '/usr/lib64/centreon-engine'}
     - { regexp: '@CENTREONBROKER_CBMOD@', replace: '/usr/lib64/nagios/cbmod.so'}
-    - { regexp: '@CENTREON_PLUGINS@', replace: '/usr/lib/centreon/plugin'}
+    - { regexp: '@CENTREON_PLUGINS@', replace: '/usr/lib/centreon/plugins'}
+    - { regexp: '@CENTREONPLUGINS@', replace: '/usr/lib/centreon/plugins'}
+    - { regexp: '@MONITORINGENGINE_PLUGIN@', replace: '/usr/lib/nagios/plugins'}
     - { regexp: '@CENTREONBROKER_CBMOD@', replace: '/usr/lib/nagios/cbmod.so'}
-    - { regexp: '@MONITORINGENGINE_PLUGIN@', replace: '/usr/lib/nagios/plugin'}
     - { regexp: '@MONITORING_VAR_LIB@', replace: '/var/lib/centreon-engine'}
     - { regexp: '@DB_HOST@', replace: '{{ mysql_hostname }}'}
     - { regexp: '@DB_PORT@', replace: '{{ mysql_port }}'}
