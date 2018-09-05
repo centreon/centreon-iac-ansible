@@ -1,0 +1,31 @@
+#!/usr/bin/python
+
+"""$ yum install -y python-requests python-lxml"""
+
+import requests
+import lxml.html
+
+URL = 'http://localhost/centreon'
+client = requests.session()
+page = client.get(URL)
+token = lxml.html.fromstring(
+    page.content
+).forms[0].fields['centreon_token']
+cookies = page.cookies
+login_data = dict(
+    useralias='admin',
+    password='{{ ADMIN_PASSWORD }}',
+    centreon_token=token
+)
+
+do_login = client.post(URL, data=login_data, cookies=cookies)
+
+URL_INSTALL = (
+    'http://localhost/centreon/api/internal.php?'
+    'object=centreon_pp_manager_pluginpack&action=installupdate'
+)
+pack = (
+    '{"pluginpack":[{"slug":"base-generic"'
+    ',"version":"3.1.11","action":"install"}]}'
+)
+do_install = client.post(URL_INSTALL, data=pack, cookies=cookies)
