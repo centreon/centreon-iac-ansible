@@ -7,11 +7,11 @@
     yum:
       name: libselinux-python
       state: present
-    when: ansible_virtualization_type != "docker"
+    when: ansible_virtualization_type not in ["docker", "kvm"]
   - name: disable selinux (default)
     selinux:
       state: disabled
-    when: ansible_virtualization_type != "docker"
+    when: ansible_virtualization_type  not in ["docker", "kvm"]
 
   - name: add repo centreon centos6
     get_url:
