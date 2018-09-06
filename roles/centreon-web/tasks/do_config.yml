@@ -26,14 +26,6 @@
 
   - import_tasks: mysql_tasks.yml
 
-  - name: Delete install directories
-    file:
-      path: "{{ item }}"
-      state: absent
-    with_items:
-      - /usr/share/centreon/install
-      - /usr/share/centreon/www/install
-
   - name: Generate configuration with CLAPI
     shell: |
       /usr/share/centreon/bin/centreon -u admin -p {{ centreon_admin_password }} -a POLLERGENERATE -v 1
@@ -43,5 +35,44 @@
     register: p
 
   - name: Create controller install file
-    file: path=/etc/centreon/ansible_install state=touch owner=centreon group=centreon mode=0644
+    file:
+      path: /etc/centreon/ansible_install
+      state: touch
+      owner: centreon
+      group: centreon
+      mode: 0644
     when: not p.stat.exists and p.stat.exists is defined
+
+  - name: Copy installer Plugin Manager
+    copy:
+      src: files/do_install_module.php
+      dest: /usr/share/centreon/install/do_install_module.php
+      mode: 0644
+
+  - name: Install Plugin Manager extension
+    shell: /usr/bin/php /usr/share/centreon/install/do_install_module.php
+
+  - name: Python packages necessaries
+    yum:
+      name:
+        - python-requests
+        - python-lxml
+      state: latest
+
+  - name: Setup script basic-generic plugins
+    template:
+      src: templates/do_install_basic_plugins.py.j2
+      dest: /usr/share/centreon/install/do_install_basic_plugins.py
+      mode: 0644
+
+  - name: Install extension Plugin Manager
+    shell: |
+      /usr/bin/python /usr/share/centreon/install/do_install_basic_plugins.py
+
+  - name: Delete install directories
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - /usr/share/centreon/install
+      - /usr/share/centreon/www/install
