@@ -98,3 +98,32 @@
       state: enabled
       immediate: yes
     when: ansible_distribution_major_version == "7"
+
+  - name: Copy installer Plugin Manager
+    copy:
+      src: files/do_install_module.php
+      dest: /tmp/do_install_module.php
+      mode: 0644
+
+  - name: Install Plugin Manager extension
+    shell: |
+      /usr/bin/php /tmp/do_install_module.php && \
+      rm -rf /tmp/do_install_module.php
+
+  - name: Python packages necessaries
+    yum:
+      name:
+        - python-requests
+        - python-lxml
+      state: latest
+
+  - name: Setup script basic-generic plugins
+    template:
+      src: templates/do_install_basic_plugins.py.j2
+      dest: /tmp/do_install_basic_plugins.py
+      mode: 0644
+
+  - name: Install extension Plugin Manager
+    shell: |
+      /usr/bin/python /tmp/do_install_basic_plugins.py && \
+      rm -rf /tmp/do_install_basic_plugins.py

@@ -43,32 +43,6 @@
       mode: 0644
     when: not p.stat.exists and p.stat.exists is defined
 
-  - name: Copy installer Plugin Manager
-    copy:
-      src: files/do_install_module.php
-      dest: /usr/share/centreon/install/do_install_module.php
-      mode: 0644
-
-  - name: Install Plugin Manager extension
-    shell: /usr/bin/php /usr/share/centreon/install/do_install_module.php
-
-  - name: Python packages necessaries
-    yum:
-      name:
-        - python-requests
-        - python-lxml
-      state: latest
-
-  - name: Setup script basic-generic plugins
-    template:
-      src: templates/do_install_basic_plugins.py.j2
-      dest: /usr/share/centreon/install/do_install_basic_plugins.py
-      mode: 0644
-
-  - name: Install extension Plugin Manager
-    shell: |
-      /usr/bin/python /usr/share/centreon/install/do_install_basic_plugins.py
-
   - name: Delete install directories
     file:
       path: "{{ item }}"
