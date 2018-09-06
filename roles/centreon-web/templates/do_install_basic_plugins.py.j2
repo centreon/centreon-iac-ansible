@@ -2,6 +2,8 @@
 
 """$ yum install -y python-requests python-lxml"""
 
+import sys
+import json
 import requests
 import lxml.html
 
@@ -17,15 +19,32 @@ login_data = dict(
     password='{{ centreon_admin_password }}',
     centreon_token=token
 )
-
 do_login = client.post(URL, data=login_data, cookies=cookies)
+
+# Get a list of packages avaiable to install
+URL_LIST = (
+    'http://localhost/centreon/api/internal.php?'
+    'object=centreon_pp_manager_pluginpack&action=list'
+)
+do_list = client.get(URL_LIST, cookies=cookies)
+packlist = json.loads(do_list.content)
+
+pack_install = {{ plugin_pack }}
 
 URL_INSTALL = (
     'http://localhost/centreon/api/internal.php?'
     'object=centreon_pp_manager_pluginpack&action=installupdate'
 )
-pack = (
-    '{"pluginpack":[{"slug":"base-generic"'
-    ',"version":"3.1.11","action":"install"}]}'
-)
-do_install = client.post(URL_INSTALL, data=pack, cookies=cookies)
+for pack in pack_install:
+    if pack not in [_x['name'] for _x in packlist['data']]:
+        print 'Plugin %s not in list' % pack
+        sys.exit(1)
+    pack_obj = [
+        _pack for _pack in packlist['data'] if _pack['name'] == pack
+    ][0]
+    pack_data = (
+        '{"pluginpack":[{"slug":"' + pack_obj['slug'] + '"'
+        ',"version":"' + pack_obj['available_version'] + '",'
+        '"action":"install"}]}'
+    )
+    do_install = client.post(URL_INSTALL, data=pack_data, cookies=cookies)

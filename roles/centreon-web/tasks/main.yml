@@ -117,13 +117,13 @@
         - python-lxml
       state: latest
 
-  - name: Setup script basic-generic plugins
+  - name: Setup script to install plugins
     template:
       src: templates/do_install_basic_plugins.py.j2
       dest: /tmp/do_install_basic_plugins.py
       mode: 0644
 
-  - name: Install extension Plugin Manager
+  - name: Install Plugins
     shell: |
       /usr/bin/python /tmp/do_install_basic_plugins.py && \
       rm -rf /tmp/do_install_basic_plugins.py

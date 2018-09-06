@@ -18,6 +18,9 @@
       mysql_centreon_username: "centreon"
       mysql_centreon_password: "p4ssw0rd"
       centreon_admin_password: "p4ssw0rd"
+      plugin_pack:
+        - "base-generic"
+        - "Linux SNMP"
 
 - name: Centreon-Poller
   hosts: centreon-poller
