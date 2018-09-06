@@ -29,6 +29,14 @@ URL_LIST = (
 do_list = client.get(URL_LIST, cookies=cookies)
 packlist = json.loads(do_list.content)
 
+# Get a list of
+URL_INSTALLED = (
+    'http://localhost/centreon/api/internal.php?'
+    'object=centreon_pp_manager_pluginpack&action=ListInstalledOrdered'
+)
+do_installed = client.get(URL_INSTALLED, cookies=cookies)
+packinstalled = json.loads(do_installed.content)
+
 pack_install = {{ plugin_pack }}
 
 URL_INSTALL = (
@@ -36,15 +44,20 @@ URL_INSTALL = (
     'object=centreon_pp_manager_pluginpack&action=installupdate'
 )
 for pack in pack_install:
-    if pack not in [_x['name'] for _x in packlist['data']]:
+    if (
+        pack not in [_x['name'] for _x in packlist['data']]
+    ) and (
+        pack not in [_x['name'] for _x in packinstalled['data']]
+    ):
         print 'Plugin %s not in list' % pack
         sys.exit(1)
-    pack_obj = [
-        _pack for _pack in packlist['data'] if _pack['name'] == pack
-    ][0]
-    pack_data = (
-        '{"pluginpack":[{"slug":"' + pack_obj['slug'] + '"'
-        ',"version":"' + pack_obj['available_version'] + '",'
-        '"action":"install"}]}'
-    )
-    do_install = client.post(URL_INSTALL, data=pack_data, cookies=cookies)
+    if pack in [_x['name'] for _x in packlist['data']]:
+        pack_obj = [
+            _pack for _pack in packlist['data'] if _pack['name'] == pack
+        ][0]
+        pack_data = (
+            '{"pluginpack":[{"slug":"' + pack_obj['slug'] + '"'
+            ',"version":"' + pack_obj['available_version'] + '",'
+            '"action":"install"}]}'
+        )
+        do_install = client.post(URL_INSTALL, data=pack_data, cookies=cookies)
