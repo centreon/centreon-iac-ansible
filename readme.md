@@ -90,6 +90,11 @@ Create a file with the playbooks (eg: `deploy.yaml`) with content bellow:
       mysql_centreon_username: "centreon"
       mysql_centreon_password: "p4ssw0rd"
       centreon_admin_password: "p4ssw0rd"
+      plugin_pack:
+        - "base-generic"
+        - "Linux SNMP"
+        - "Windows SNMP"
+        - "HTTP Server"
 
 - name: Centreon-Poller
   hosts: centreon-poller
@@ -99,10 +104,31 @@ Create a file with the playbooks (eg: `deploy.yaml`) with content bellow:
     - "roles/common"
     - "roles/centreon-poller"
 
-
 ```
 
 Set variables `mysql_password` and `php_timezone` with values from you environment.
+
+Plugin list available:
+  - base-generic
+  - Centreon
+  - Centreon DB
+  - Centreon Poller
+  - Cisco standard
+  - Linux SNMP
+  - MySQL DB
+  - Printer standard
+  - UPS Standard
+  - Windows SNMP
+  - DHCP Server
+  - DNS Service
+  - FTP Server
+  - HTTP Server
+  - LDAP Server
+  - 3com Network
+  - AIX SNMP
+  - AKCP Sensor
+  - Alcatel OXE
+  - Apache Server
 
 Run the deployment with command:
 ```
