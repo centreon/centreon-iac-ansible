@@ -1,7 +1,9 @@
 ---
   - name: install centreon poller and requirements
     yum:
-      name: centreon-poller-centreon-engine
+      name:
+        - centreon-poller-centreon-engine
+        - centreon-broker-cbd
       state: latest
 
   - name: Set authorized key to use by Centreon web
