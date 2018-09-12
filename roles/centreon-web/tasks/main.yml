@@ -17,6 +17,13 @@
   - name: Check httpd service
     service: name=httpd enabled=yes state=started
 
+  - name: 'Create Centreon user home directory'
+    file:
+      path: '/var/spool/centreon'
+      state: 'directory'
+      owner: 'centreon'
+      group: 'centreon'
+
   - name: Generate SSH keys
     shell: ssh-keygen -t rsa -f /var/spool/centreon/.ssh/id_rsa -q -N ""
     args:
