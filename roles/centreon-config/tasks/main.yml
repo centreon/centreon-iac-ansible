@@ -1,0 +1,46 @@
+---
+
+  - name: Manage Host
+    shell: |
+      LINE="$({{ centreon_api }} -o HOST -a show | sed 1d | grep "{{ item.host }}")"
+      if [ "$(echo $LINE | cut -d\; -f2)" = "{{ item.host }}" ]; then
+        if [ "{{ item.state }}" == "absent" ]; then
+           {{ centreon_api }} -o HOST -a DEL -v "{{ item.host }}" \
+           && echo "Host {{ item.host }} removed because state is absent"
+        fi
+      else
+        {{ centreon_api }} -o HOST -a ADD \
+        -v "{{ item.host }};{{ item.alias }};{{ item.address }};{{ item.template }};{{ item.instance }};" \
+        && echo "Add host {{ item.host }}"
+      fi
+      if [ "{{ item.state }}" != "absent" ]; then
+        {% for key, value in item.items() if key not in ['host', 'template', 'instance', 'state', 'hostgroup'] %}
+          if ! [ "$({{ centreon_api }} -o HOST -a getparam -v "{{ item.host }};{{ key }}" | grep "{{ value }}")" ] && [ "{{ value }}" ]; then
+            {{ centreon_api }} -o HOST -a setparam -v "{{ item.host }};{{ key }};{{ value }}" \
+            && echo "Set parameter {{ key }} to {{ value }}"
+          fi
+        {% endfor %}
+        if [ "{{ item.state }}" = "enabled" ] && [ "$(echo $LINE | cut -d\; -f5)" != "1" ]; then
+          {{ centreon_api }} -o HOST -a enable -v "{{ item.host }}" \
+          && echo "Set state of host {{ item.host }} to enable"
+        elif [ "{{ item.state }}" = "disabled" ] && [ "$(echo $LINE | cut -d\; -f5)" != "0" ]; then
+          {{ centreon_api }} -o HOST -a disable -v "{{ item.host }}" \
+          && echo "Set state of host {{ item.host }} to disable"
+        fi
+        if ! [ "$({{ centreon_api }} -o HOST -a gethostgroup -v "{{ item.host }}" | grep "{{ item.hostgroup }}")" ] && [ "{{ item.hostgroup }}" ]; then
+          {{ centreon_api }} -o HOST -a sethostgroup -v "{{ item.host }};{{ item.hostgroup }}" \
+          && echo "Set group(s) to {{ item.hostgroup }} for host {{ item.host }}"
+        fi
+        if ! [ "$({{ centreon_api }} -o HOST -a gettemplate -v "{{ item.host }}" | grep "{{ item.template }}")" ] && [ "{{ item.template }}" ]; then
+          {{ centreon_api }} -o HOST -a settemplate -v "{{ item.host }};{{ item.template }}" \
+          && echo "Set template(s) to {{ item.template }} for host {{ item.host }}"
+        fi
+        # {{ centreon_api }} -o HOST -a setinstance -v "{{ item.host }};{{ item.instance }}" \
+        # && echo "Set instance to {{ item.instance }} for host {{ item.host }}"
+      fi
+    register: do_manage_host
+    with_items: "{{ host_list }}"
+    changed_when: do_manage_host.stdout != ''
+    notify:
+        - apply templates
+        - apply pollers
