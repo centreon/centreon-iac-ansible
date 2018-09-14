@@ -32,6 +32,10 @@ Tasks:
 * Generate SSH key (used by remote Centreon Poller)
 * Start and enable services necessaries
 * Setup firewall rules
+* Role to manage objects of monitoring in Centreon
+  - Add/edit Hosts, Services, Users, Groups, etc
+  - Manage ACL's
+  - Add/edit instances Poller's
 
 Centreon Poller Playbook
 ------------------------
@@ -95,6 +99,36 @@ Create a file with the playbooks (eg: `deploy.yaml`) with content bellow:
         - "Linux SNMP"
         - "Windows SNMP"
         - "HTTP Server"
+
+        - role: "roles/centreon-config"
+          host_list:
+            - {
+              'host': 'test01',
+              'alias': 'Server teste 01',
+              'address': '127.0.0.1',
+              'template': 'generic-active-host-custom',
+              'instance': 'central',
+              'hostgroup': '',
+              'state': 'enabled' # enabled, disabled, absent
+            }
+            - {
+              'host': 'test02',
+              'alias': 'Server teste 02',
+              'address': '127.0.0.1',
+              'template': 'generic-active-host-custom',
+              'instance': 'central',
+              'hostgroup': '',
+              'state': 'enabled' # enabled, disabled, absent
+            }
+            - {
+              'host': 'test03',
+              'alias': 'Server teste 03',
+              'address': '127.0.0.1',
+              'template': 'generic-active-host-custom',
+              'instance': 'central',
+              'hostgroup': '',
+              'state': 'absent' # enabled, disabled, absent
+            }
 
 - name: Centreon-Poller
   hosts: centreon-poller
