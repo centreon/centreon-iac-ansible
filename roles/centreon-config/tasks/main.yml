@@ -5,10 +5,10 @@
       LINE="$({{ centreon_api }} -o HOST -a show | sed 1d | grep "{{ item.host }}")"
       if [ "$(echo $LINE | cut -d\; -f2)" = "{{ item.host }}" ]; then
         if [ "{{ item.state }}" == "absent" ]; then
-           {{ centreon_api }} -o HOST -a DEL -v "{{ item.host }}" \
-           && echo "Host {{ item.host }} removed because state is absent"
+          {{ centreon_api }} -o HOST -a DEL -v "{{ item.host }}" \
+          && echo "Host {{ item.host }} removed because state is absent"
         fi
-      else
+      elif [ "{{ item.state }}" != "absent" ]; then
         {{ centreon_api }} -o HOST -a ADD \
         -v "{{ item.host }};{{ item.alias }};{{ item.address }};{{ item.template }};{{ item.instance }};" \
         && echo "Add host {{ item.host }}"
