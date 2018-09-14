@@ -118,6 +118,9 @@ Create a file with the playbooks (eg: `deploy.yaml`) with content bellow:
           'template': 'generic-active-host-custom',
           'instance': 'central',
           'hostgroup': '',
+          'notes': 'Test notes',
+          'snmp_community': 'public',
+          'snmp_version': '1',
           'state': 'enabled' # enabled, disabled, absent
         }
         - {
