@@ -38,7 +38,8 @@
           'admin': '0',
           'gui': '1',
           'language': 'en_US',
-          'auth': 'local'
+          'auth': 'local',
+          'state': 'enabled' # enabled, disabled, absent
           }
       host_list:
         - {
