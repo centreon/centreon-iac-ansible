@@ -24,6 +24,22 @@
         - "Linux SNMP"
 
     - role: "roles/centreon-config"
+      contact_group:
+        - {
+          'name': 'testers',
+          'alias': 'Testers contacts'
+          }
+      contact_list:
+        - {
+          'name': 'Test contact One',
+          'alias': 'test01',
+          'email': 'test01@test.centreon.com',
+          'password': 'easypass',
+          'admin': '0',
+          'gui': '1',
+          'language': 'en_US',
+          'auth': 'local'
+          }
       host_list:
         - {
           'host': 'test01',
@@ -55,6 +71,15 @@
           'hostgroup': '',
           'state': 'absent' # enabled, disabled, absent
         }
+      service_list:
+        - {
+          'host': 'test01',
+          'service': 'cpu_snmp',
+          'template': '',
+          'state': 'enabled' # enabled, disabled, absent
+          }
+
+
 
 - name: Centreon-Poller
   hosts: centreon-poller
