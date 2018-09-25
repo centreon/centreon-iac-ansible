@@ -29,7 +29,7 @@
   - name: Generate configuration with CLAPI
     shell: |
       /usr/share/centreon/bin/centreon -u admin -p {{ centreon_admin_password }} -a POLLERGENERATE -v 1
-      #/usr/share/centreon/bin/centreon -u admin -p {{ centreon_admin_password }} -a CFGMOVE -v 1
+      /usr/share/centreon/bin/centreon -u admin -p {{ centreon_admin_password }} -a CFGMOVE -v 1
 
   - stat: path=/etc/centreon/ansible_install
     register: p
