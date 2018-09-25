@@ -29,6 +29,7 @@
     - { regexp: '(?i)@MONITORING_ETC@', replace: '/etc/centreon-engine'}
     - { regexp: '(?i)@MONITORING_INIT_SCRIPT@', replace: 'centengine'}
     - { regexp: '(?i)@MONITORING_BINARY@', replace: '/usr/sbin/centengine'}
+    - { regexp: '(?i)@MONITORING_VARLOG@', replace: '/var/log/centreon-engine'}
     - { regexp: '(?i)@MONITORING_VAR_LOG@', replace: '/var/log/centreon-engine'}
     - { regexp: '(?i)@PLUGIN_DIR@', replace: '/usr/lib/nagios/plugin'}
     - { regexp: '(?i)@NAGIOS_PLUGIN@', replace: '/usr/lib/nagios/plugin'}
