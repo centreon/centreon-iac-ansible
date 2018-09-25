@@ -42,15 +42,19 @@
     - { regexp: '(?i)@CENTREONBROKER_CBMOD@', replace: '/usr/lib/nagios/cbmod.so'}
     - { regexp: '(?i)@MONITORING_VAR_LIB@', replace: '/var/lib/centreon-engine'}
     - { regexp: '(?i)@DB_HOST@', replace: '{{ mysql_hostname }}'}
+    - { regexp: '(?i)@ADDRESS@', replace: '{{ mysql_hostname }}'}
     - { regexp: '(?i)@DB_PORT@', replace: '{{ mysql_port }}'}
+    - { regexp: '(?i)@PORT@', replace: '{{ mysql_port }}'}
     - { regexp: '(?i)@DB_USER@', replace: '{{ mysql_centreon_username }}'}
     - { regexp: '(?i)@DB_PASS@', replace: '{{ mysql_centreon_password }}'}
+    - { regexp: '(?i)@DB_PASSWORD@', replace: '{{ mysql_centreon_password }}'}
     - { regexp: '(?i)@UTILS_DB@', replace: 'centreon_status'}
     - { regexp: '(?i)@NDOMOD_BINARY@', replace: '/usr/lib64/nagios/ndomod.o'}
     - { regexp: '(?i)@CENTREON_ENGINE_STATS_BINARY@', replace: '/usr/sbin/centenginestats'}
     - { regexp: '(?i)@NAGIOS_BINARY@', replace: '/usr/sbin/nagios'}
     - { regexp: '(?i)@NAGIOSTATS_BINARY@', replace: '/usr/bin/nagiostat'}
     - { regexp: '(?i)@NAGIOS_INIT_SCRIPT@', replace: '/etc/init.d/nagios'}
+    - { regexp: '(?i)@DB_STORAGE@', replace: 'centreon_storage'}
     - { regexp: '(?i)@STORAGE_DB@', replace: 'centreon_storage'}
     - { regexp: '(?i)@CENTREON_ENGINE_LIB@', replace: '/usr/lib64/centreon-engine'}
     - { regexp: '(?i)@CENTREONBROKER_LIB@', replace: '/usr/share/centreon/lib/centreon-broker'}
