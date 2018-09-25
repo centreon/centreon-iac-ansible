@@ -25,6 +25,8 @@
     - { regexp: '(?i)@MAILER@', replace: '/bin/mail'}
     - { regexp: '(?i)@MONITORINGENGINE_USER@', replace: 'centreon-engine'}
     - { regexp: '(?i)@MONITORINGENGINE_GROUP@', replace: 'centreon-engine'}
+    - { regexp: '(?i)@MONITORING_USER@', replace: 'centreon-engine'}
+    - { regexp: '(?i)@MONITORING_GROUP@', replace: 'centreon-engine'}
     - { regexp: '(?i)@MONITORINGENGINE_ETC@', replace: '/etc/centreon-engine'}
     - { regexp: '(?i)@MONITORING_ETC@', replace: '/etc/centreon-engine'}
     - { regexp: '(?i)@MONITORING_INIT_SCRIPT@', replace: 'centengine'}
@@ -60,6 +62,7 @@
     - { regexp: '(?i)@CENTREONBROKER_LIB@', replace: '/usr/share/centreon/lib/centreon-broker'}
     - { regexp: '(?i)@BROKER_USER@', replace: 'centreon-broker'}
     - { regexp: '(?i)@BROKER_GROUP@', replace: 'centreon-broker'}
+    - { regexp: '(?i)@BROKER_ETC@', replace: '/etc/centreon-broker'}
     - { regexp: '(?i)@CENTREONBROKER_ETC@', replace: '/etc/centreon-broker'}
     - { regexp: '(?i)@BROKER_INIT_SCRIPT@', replace: 'cbd'}
     - { regexp: '(?i)@CENTREONBROKER_LOG@', replace: '/var/log/centreon-broker'}
