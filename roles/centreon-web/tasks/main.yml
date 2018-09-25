@@ -1,4 +1,10 @@
 ---
+  - name: install SCL package required by PHP 7.1
+    yum:
+      name:
+        - centos-release-scl
+      state: latest
+
   - name: install centreon web and requirements
     yum:
       name:
@@ -10,9 +16,12 @@
     blockinfile:
       create: yes
       marker: "; {mark} ANSIBLE MANAGED BLOCK"
-      path: /etc/php.d/php-timezone.ini
+      path: /etc/opt/rh/rh-php71/php.d/php-timezone.ini
       content: |
         date.timezone = {{ php_timezone }}
+
+  - name: Check PHP 7.1 FPM service
+    service: name=rh-php71-php-fpm enabled=yes state=started
 
   - name: Check httpd service
     service: name=httpd enabled=yes state=started
@@ -80,16 +89,6 @@
     service: name=firewalld state=started enabled=yes
     when: ansible_distribution_major_version == "7"
 
-  - name: Firewall allow http/broker (centos6)
-    blockinfile:
-      path: /etc/sysconfig/iptables
-      insertafter: "-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT"
-      content: |
-        -A INPUT -p tcp --dport 80 -j ACCEPT
-        -A INPUT -p tcp --dport 5669 -j ACCEPT
-    notify: "restart iptables"
-    when: ansible_distribution_major_version == "6"
-
   - name: Firewall allow http (centos7)
     firewalld:
       service: http
@@ -108,14 +107,14 @@
 
   - name: Copy installer Plugin Manager
     copy:
-      src: files/do_install_module.php
-      dest: /tmp/do_install_module.php
+      src: files/install_modules.php
+      dest: /tmp/install_modules.php
       mode: 0644
 
   - name: Install Plugin Manager extension
     shell: |
-      /usr/bin/php /tmp/do_install_module.php && \
-      rm -rf /tmp/do_install_module.php
+      /opt/rh/rh-php71/root/bin/php /tmp/install_modules.php && \
+      rm -rf /tmp/install_modules.php
 
   - name: Python packages necessaries
     yum:

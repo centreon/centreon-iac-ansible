@@ -11,50 +11,50 @@
   centreon_admin_password: "p4ssw0rd"
 
   items_replace:
-    - { regexp: '@CENTREON_DIR@', replace: '/usr/share/centreon/'}
-    - { regexp: '@CENTREON_ETC@', replace: '/etc/centreon/'}
-    - { regexp: '@CENTREON_DIR_WWW@', replace: '/usr/share/centreon/www/'}
-    - { regexp: '@CENTREON_DIR_RRD@', replace: '/var/lib/centreon'}
-    - { regexp: '@CENTREON_LOG@', replace: '/var/log/centreon'}
-    - { regexp: '@CENTREON_VARLIB@', replace: '/var/lib/centreon'}
-    - { regexp: '@CENTREON_GROUP@', replace: 'centreon'}
-    - { regexp: '@CENTREON_USER@', replace: 'centreon'}
-    - { regexp: '@RRDTOOL_DIR@', replace: '/usr/bin/rrdtool'}
-    - { regexp: '@APACHE_USER@', replace: 'apache'}
-    - { regexp: '@APACHE_GROUP@', replace: 'apache'}
-    - { regexp: '@MAILER@', replace: '/bin/mail'}
-    - { regexp: '@MONITORINGENGINE_USER@', replace: 'centreon-engine'}
-    - { regexp: '@MONITORINGENGINE_GROUP@', replace: 'centreon-engine'}
-    - { regexp: '@MONITORINGENGINE_ETC@', replace: '/etc/centreon-engine'}
-    - { regexp: '@MONITORING_INIT_SCRIPT@', replace: 'centengine'}
-    - { regexp: '@MONITORING_BINARY@', replace: '/usr/sbin/centengine'}
-    - { regexp: '@MONITORING_VAR_LOG@', replace: '/var/log/centreon-engine'}
-    - { regexp: '@PLUGIN_DIR@', replace: '/usr/lib/nagios/plugin'}
-    - { regexp: '@NAGIOS_PLUGIN@', replace: '/usr/lib/nagios/plugin'}
-    - { regexp: '@CENTREON_ENGINE_CONNECTORS@', replace: '/usr/lib64/centreon-connector'}
-    - { regexp: '@CENTREON_ENGINE_LIB@', replace: '/usr/lib64/centreon-engine'}
-    - { regexp: '@CENTREONBROKER_CBMOD@', replace: '/usr/lib64/nagios/cbmod.so'}
-    - { regexp: '@CENTREON_PLUGINS@', replace: '/usr/lib/centreon/plugins'}
-    - { regexp: '@CENTREONPLUGINS@', replace: '/usr/lib/centreon/plugins'}
-    - { regexp: '@MONITORINGENGINE_PLUGIN@', replace: '/usr/lib/nagios/plugins'}
-    - { regexp: '@CENTREONBROKER_CBMOD@', replace: '/usr/lib/nagios/cbmod.so'}
-    - { regexp: '@MONITORING_VAR_LIB@', replace: '/var/lib/centreon-engine'}
-    - { regexp: '@DB_HOST@', replace: '{{ mysql_hostname }}'}
-    - { regexp: '@DB_PORT@', replace: '{{ mysql_port }}'}
-    - { regexp: '@DB_USER@', replace: '{{ mysql_centreon_username }}'}
-    - { regexp: '@DB_PASS@', replace: '{{ mysql_centreon_password }}'}
-    - { regexp: '@UTILS_DB@', replace: 'centreon_status'}
-    - { regexp: '@NDOMOD_BINARY@', replace: '/usr/lib64/nagios/ndomod.o'}
-    - { regexp: '@CENTREON_ENGINE_STATS_BINARY@', replace: '/usr/sbin/centenginestats'}
-    - { regexp: '@NAGIOS_BINARY@', replace: '/usr/sbin/nagios'}
-    - { regexp: '@NAGIOSTATS_BINARY@', replace: '/usr/bin/nagiostat'}
-    - { regexp: '@NAGIOS_INIT_SCRIPT@', replace: '/etc/init.d/nagios'}
-    - { regexp: '@STORAGE_DB@', replace: 'centreon_storage'}
-    - { regexp: '@CENTREON_ENGINE_LIB@', replace: '/usr/lib64/centreon-engine'}
-    - { regexp: '@CENTREONBROKER_LIB@', replace: '/usr/share/centreon/lib/centreon-broker'}
-    - { regexp: '@BROKER_USER@', replace: 'centreon-broker'}
-    - { regexp: '@BROKER_GROUP@', replace: 'centreon-broker'}
-    - { regexp: '@CENTREONBROKER_ETC@', replace: '/etc/centreon-broker'}
-    - { regexp: '@BROKER_INIT_SCRIPT@', replace: 'cbd'}
-    - { regexp: '@CENTREONBROKER_LOG@', replace: '/var/log/centreon-broker'}
-    - { regexp: '@CENTREONBROKER_VARLIB@', replace: '/var/lib/centreon-broker'}
+    - { regexp: '(?i)@CENTREON_DIR@', replace: '/usr/share/centreon/'}
+    - { regexp: '(?i)@CENTREON_ETC@', replace: '/etc/centreon/'}
+    - { regexp: '(?i)@CENTREON_DIR_WWW@', replace: '/usr/share/centreon/www/'}
+    - { regexp: '(?i)@CENTREON_DIR_RRD@', replace: '/var/lib/centreon'}
+    - { regexp: '(?i)@CENTREON_LOG@', replace: '/var/log/centreon'}
+    - { regexp: '(?i)@CENTREON_VARLIB@', replace: '/var/lib/centreon'}
+    - { regexp: '(?i)@CENTREON_GROUP@', replace: 'centreon'}
+    - { regexp: '(?i)@CENTREON_USER@', replace: 'centreon'}
+    - { regexp: '(?i)@RRDTOOL_DIR@', replace: '/usr/bin/rrdtool'}
+    - { regexp: '(?i)@APACHE_USER@', replace: 'apache'}
+    - { regexp: '(?i)@APACHE_GROUP@', replace: 'apache'}
+    - { regexp: '(?i)@MAILER@', replace: '/bin/mail'}
+    - { regexp: '(?i)@MONITORINGENGINE_USER@', replace: 'centreon-engine'}
+    - { regexp: '(?i)@MONITORINGENGINE_GROUP@', replace: 'centreon-engine'}
+    - { regexp: '(?i)@MONITORINGENGINE_ETC@', replace: '/etc/centreon-engine'}
+    - { regexp: '(?i)@MONITORING_INIT_SCRIPT@', replace: 'centengine'}
+    - { regexp: '(?i)@MONITORING_BINARY@', replace: '/usr/sbin/centengine'}
+    - { regexp: '(?i)@MONITORING_VAR_LOG@', replace: '/var/log/centreon-engine'}
+    - { regexp: '(?i)@PLUGIN_DIR@', replace: '/usr/lib/nagios/plugin'}
+    - { regexp: '(?i)@NAGIOS_PLUGIN@', replace: '/usr/lib/nagios/plugin'}
+    - { regexp: '(?i)@CENTREON_ENGINE_CONNECTORS@', replace: '/usr/lib64/centreon-connector'}
+    - { regexp: '(?i)@CENTREON_ENGINE_LIB@', replace: '/usr/lib64/centreon-engine'}
+    - { regexp: '(?i)@CENTREONBROKER_CBMOD@', replace: '/usr/lib64/nagios/cbmod.so'}
+    - { regexp: '(?i)@CENTREON_PLUGINS@', replace: '/usr/lib/centreon/plugins'}
+    - { regexp: '(?i)@CENTREONPLUGINS@', replace: '/usr/lib/centreon/plugins'}
+    - { regexp: '(?i)@MONITORINGENGINE_PLUGIN@', replace: '/usr/lib/nagios/plugins'}
+    - { regexp: '(?i)@CENTREONBROKER_CBMOD@', replace: '/usr/lib/nagios/cbmod.so'}
+    - { regexp: '(?i)@MONITORING_VAR_LIB@', replace: '/var/lib/centreon-engine'}
+    - { regexp: '(?i)@DB_HOST@', replace: '{{ mysql_hostname }}'}
+    - { regexp: '(?i)@DB_PORT@', replace: '{{ mysql_port }}'}
+    - { regexp: '(?i)@DB_USER@', replace: '{{ mysql_centreon_username }}'}
+    - { regexp: '(?i)@DB_PASS@', replace: '{{ mysql_centreon_password }}'}
+    - { regexp: '(?i)@UTILS_DB@', replace: 'centreon_status'}
+    - { regexp: '(?i)@NDOMOD_BINARY@', replace: '/usr/lib64/nagios/ndomod.o'}
+    - { regexp: '(?i)@CENTREON_ENGINE_STATS_BINARY@', replace: '/usr/sbin/centenginestats'}
+    - { regexp: '(?i)@NAGIOS_BINARY@', replace: '/usr/sbin/nagios'}
+    - { regexp: '(?i)@NAGIOSTATS_BINARY@', replace: '/usr/bin/nagiostat'}
+    - { regexp: '(?i)@NAGIOS_INIT_SCRIPT@', replace: '/etc/init.d/nagios'}
+    - { regexp: '(?i)@STORAGE_DB@', replace: 'centreon_storage'}
+    - { regexp: '(?i)@CENTREON_ENGINE_LIB@', replace: '/usr/lib64/centreon-engine'}
+    - { regexp: '(?i)@CENTREONBROKER_LIB@', replace: '/usr/share/centreon/lib/centreon-broker'}
+    - { regexp: '(?i)@BROKER_USER@', replace: 'centreon-broker'}
+    - { regexp: '(?i)@BROKER_GROUP@', replace: 'centreon-broker'}
+    - { regexp: '(?i)@CENTREONBROKER_ETC@', replace: '/etc/centreon-broker'}
+    - { regexp: '(?i)@BROKER_INIT_SCRIPT@', replace: 'cbd'}
+    - { regexp: '(?i)@CENTREONBROKER_LOG@', replace: '/var/log/centreon-broker'}
+    - { regexp: '(?i)@CENTREONBROKER_VARLIB@', replace: '/var/lib/centreon-broker'}

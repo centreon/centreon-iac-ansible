@@ -1,0 +1,76 @@
+[centreon-stable-noarch]
+name=Centreon open source software repository.
+baseurl=http://yum.centreon.com/standard/18.10/el7/stable/noarch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CES
+
+[centreon-stable]
+name=Centreon open source software repository.
+baseurl=http://yum.centreon.com/standard/18.10/el7/stable/$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CES
+
+[centreon-testing-noarch]
+name=Centreon open source software repository. (UNSUPPORTED)
+baseurl=http://yum.centreon.com/standard/18.10/el7/testing/noarch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CES
+
+[centreon-testing]
+name=Centreon open source software repository. (UNSUPPORTED)
+baseurl=http://yum.centreon.com/standard/18.10/el7/testing/$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CES
+
+[centreon-unstable-noarch]
+name=Centreon open source software repository. (UNSUPPORTED)
+baseurl=http://yum.centreon.com/standard/18.10/el7/unstable/noarch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CES
+
+[centreon-stable-noarch]
+name=Centreon open source software repository.
+baseurl=http://yum.centreon.com/standard/18.10/el7/stable/noarch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CES
+
+[centreon-stable]
+name=Centreon open source software repository.
+baseurl=http://yum.centreon.com/standard/18.10/el7/stable/$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CES
+
+[centreon-testing-noarch]
+name=Centreon open source software repository. (UNSUPPORTED)
+baseurl=http://yum.centreon.com/standard/18.10/el7/testing/noarch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CES
+
+[centreon-testing]
+name=Centreon open source software repository. (UNSUPPORTED)
+baseurl=http://yum.centreon.com/standard/18.10/el7/testing/$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CES
+
+[centreon-unstable-noarch]
+name=Centreon open source software repository. (UNSUPPORTED)
+baseurl=http://yum.centreon.com/standard/18.10/el7/unstable/noarch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CES
+
+[centreon-unstable]
+name=Centreon open source software repository. (UNSUPPORTED)
+baseurl=http://yum.centreon.com/standard/18.10/el7/unstable/$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CES
