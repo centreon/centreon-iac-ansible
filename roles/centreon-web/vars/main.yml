@@ -26,6 +26,7 @@
     - { regexp: '(?i)@MONITORINGENGINE_USER@', replace: 'centreon-engine'}
     - { regexp: '(?i)@MONITORINGENGINE_GROUP@', replace: 'centreon-engine'}
     - { regexp: '(?i)@MONITORINGENGINE_ETC@', replace: '/etc/centreon-engine'}
+    - { regexp: '(?i)@MONITORING_ETC@', replace: '/etc/centreon-engine'}
     - { regexp: '(?i)@MONITORING_INIT_SCRIPT@', replace: 'centengine'}
     - { regexp: '(?i)@MONITORING_BINARY@', replace: '/usr/sbin/centengine'}
     - { regexp: '(?i)@MONITORING_VAR_LOG@', replace: '/var/log/centreon-engine'}
