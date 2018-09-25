@@ -33,8 +33,8 @@
     - { regexp: '(?i)@MONITORING_BINARY@', replace: '/usr/sbin/centengine'}
     - { regexp: '(?i)@MONITORING_VARLOG@', replace: '/var/log/centreon-engine'}
     - { regexp: '(?i)@MONITORING_VAR_LOG@', replace: '/var/log/centreon-engine'}
-    - { regexp: '(?i)@PLUGIN_DIR@', replace: '/usr/lib64/nagios/plugin'}
-    - { regexp: '(?i)@NAGIOS_PLUGIN@', replace: '/usr/lib64/nagios/plugin'}
+    - { regexp: '(?i)@PLUGIN_DIR@', replace: '/usr/lib64/nagios/plugins'}
+    - { regexp: '(?i)@NAGIOS_PLUGIN@', replace: '/usr/lib64/nagios/plugins'}
     - { regexp: '(?i)@CENTREON_ENGINE_CONNECTORS@', replace: '/usr/lib64/centreon-connector'}
     - { regexp: '(?i)@CENTREON_ENGINE_LIB@', replace: '/usr/lib64/centreon-engine'}
     - { regexp: '(?i)@CENTREONBROKER_CBMOD@', replace: '/usr/lib64/nagios/cbmod.so'}
