@@ -67,3 +67,5 @@
     - { regexp: '(?i)@BROKER_INIT_SCRIPT@', replace: 'cbd'}
     - { regexp: '(?i)@CENTREONBROKER_LOG@', replace: '/var/log/centreon-broker'}
     - { regexp: '(?i)@CENTREONBROKER_VARLIB@', replace: '/var/lib/centreon-broker'}
+    - { regexp: '(?i)@CENTREON_LOG@', replace: '/var/log/centreon-broker'}
+    - { regexp: '(?i)@CENTREON_VARLIB@', replace: '/var/lib/centreon-broker'}

@@ -28,10 +28,10 @@
           && echo "Set state of CONTACT {{ item.alias }} to disable"
         fi
       fi
-    when: contact_list is defined
     register: do_manage_contact
     with_items: "{{ contact_list }}"
     changed_when: do_manage_contact.stdout != ''
+    when: contact_list is defined
     notify:
         - apply pollers
 
