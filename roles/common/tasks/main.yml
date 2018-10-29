@@ -16,13 +16,7 @@
       state: disabled
     when: selinux_config.stat.exists == True
 
-  - name: add repo centreon centos7
-    copy:
-      src: files/centreon.repo
-      dest: /etc/yum.repos.d/centreon.repo
-      mode: 0644
-
-  - name: add rpm key to centreon repository (CentOS7)
-    rpm_key:
+  - name: add rpm repository
+    yum:
+      name: http://yum.centreon.com/standard/18.10/el7/stable/noarch/RPMS/centreon-release-18.10-2.el7.centos.noarch.rpm
       state: present
-      key: http://yum.centreon.com/standard/3.4/el7/stable/RPM-GPG-KEY-CES
