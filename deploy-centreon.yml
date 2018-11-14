@@ -1,0 +1,32 @@
+---
+
+- name: Centreon-Web
+  hosts: centreon-web
+  remote_user: root
+
+  roles:
+    - "roles/common"
+    - role: "roles/mariadb-server"
+      mysql_root_password: "p4ssw0rd"
+
+    - role: "roles/centreon-web"
+      php_timezone: "Europe/Paris"
+      mysql_hostname: "localhost"
+      mysql_port: "3306"
+      mysql_root_password: "p4ssw0rd"
+      mysql_centreon_db: "centreon"
+      mysql_centstorage_db: "centreon_storage"
+      mysql_centreon_username: "centreon"
+      mysql_centreon_password: "p4ssw0rd"
+      centreon_admin_password: "p4ssw0rd"
+      plugin_pack:
+        - "base-generic"
+        - "Linux SNMP"
+
+- name: Centreon-Poller
+  hosts: centreon-poller
+  remote_user: root
+
+  roles:
+    - "roles/common"
+    - "roles/centreon-poller"
