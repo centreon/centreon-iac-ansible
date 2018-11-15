@@ -45,7 +45,8 @@ mapobjects = {
     },
     'cg': {
         'index': 'name',
-        'required': ['name', 'alias']
+        'required': ['name', 'alias'],
+        'state': 'custom'
     },
     'dep': {
         'index': 'name',
@@ -186,7 +187,7 @@ def do_request(name=None, action=None, data=None):
 
 
 def apply_templates():
-    for host in do_request('host', 'show')['request']:
+    for host in do_request('host', 'show')['result']:
         apply = do_request('host', 'applytpl', host['name'])
         if not apply:
             print('Error in try apply template')
@@ -228,25 +229,35 @@ for name in obj.keys():
                         makeChanges = True
                         print('New object %s added' % name)
             else:
-                rstate = [i['activate'] for i in listobjects if (
-                    i[mapobjects[name]['index']] == item[mapobjects[name]['index']]
-                )][0]
-                if item['state'] == 'disabled' and rstate == '1':
-                    # Disable object
-                    # Necessary here get attribute value to test the active
-                    # state of object (for now, confirm the status)
-                    disable = do_request(
-                        name,
-                        'setparam',
-                        '%s;%s;%s' % (
-                            item[mapobjects[name]['index']],
-                            'activate',
-                            '0'
+                if 'state' in item[name].keys():
+                    if item['state'] == 'disabled':
+                        disable = do_request(name, 'disable', i[mapobjects[name]['index']])
+                        if disable:
+                            print('Object %s was disabled' % name)
+                    elif item['state'] == 'enabled':
+                        enable = do_request(name, 'enable', i[mapobjects[name]['index']])
+                        if enable:
+                            print('Object %s was enabled' % name)
+                else:
+                    rstate = [i['activate'] for i in listobjects if (
+                        i[mapobjects[name]['index']] == item[mapobjects[name]['index']]
+                    )][0]
+                    if item['state'] == 'disabled' and rstate == '1':
+                        # Disable object
+                        # Necessary here get attribute value to test the active
+                        # state of object (for now, confirm the status)
+                        disable = do_request(
+                            name,
+                            'setparam',
+                            '%s;%s;%s' % (
+                                item[mapobjects[name]['index']],
+                                'activate',
+                                '0'
+                            )
                         )
-                    )
-                    if disable:
-                        print('Object %s was disabled' % name)
-                elif item['state'] == 'absent':
+                        if disable:
+                            print('Object %s was disabled' % name)
+                if item['state'] == 'absent':
                     # Remove object
                     delete = do_request(
                         name, 'del', item[mapobjects[name]['index']]
