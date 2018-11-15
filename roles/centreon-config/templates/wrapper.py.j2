@@ -232,7 +232,7 @@ for name in obj.keys():
                         makeChanges = True
                         print('New object %s added' % name)
             else:
-                if 'state' in item[name].keys():
+                if 'state' in mapobjects[name].keys():
                     if item['state'] == 'disabled':
                         disable = do_request(name, 'disable', i[mapobjects[name]['index']])
                         if disable:
