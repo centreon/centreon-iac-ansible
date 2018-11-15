@@ -162,7 +162,7 @@ else:
     exit(1)
 
 
-def do_request(name=None, action=None, data=None):
+def do_request(name='', action='', data=''):
     try:
         if data:
             bodyData = {
@@ -199,7 +199,7 @@ def apply_templates():
 
 
 def apply_instances():
-    for poller in do_request(action='show')['result']:
+    for poller in do_request(action='pollerlist')['result']:
         apply = do_request(action='applycfg', data=poller['poller_id'])
         if not apply:
             print('Error in try apply poller')
