@@ -180,6 +180,9 @@ def do_request(name=None, action=None, data=None):
             return json.loads(req.text)
         else:
             print('Error in get objects list')
+            print('Debug:')
+            print(req.text)
+            print(bodyData)
             exit(1)
     except ValueError:
         print('Error in try post data')
