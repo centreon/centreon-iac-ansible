@@ -234,11 +234,11 @@ for name in obj.keys():
             else:
                 if 'state' in mapobjects[name].keys():
                     if item['state'] == 'disabled':
-                        disable = do_request(name, 'disable', i[mapobjects[name]['index']])
+                        disable = do_request(name, 'disable', item[mapobjects[name]['index']])
                         if disable:
                             print('Object %s was disabled' % name)
                     elif item['state'] == 'enabled':
-                        enable = do_request(name, 'enable', i[mapobjects[name]['index']])
+                        enable = do_request(name, 'enable', item[mapobjects[name]['index']])
                         if enable:
                             print('Object %s was enabled' % name)
                 else:
