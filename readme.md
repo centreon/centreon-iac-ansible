@@ -15,7 +15,6 @@ See more information: https://docs.ansible.com/ansible/latest/user_guide/playboo
 Compatibility
 -------------
 
-* CentOS 6
 * CentOS 7
 
 Centreon Web Playbook with MySQL Server
@@ -101,36 +100,64 @@ Create a file with the playbooks (eg: `deploy.yaml`) with content bellow:
         - "HTTP Server"
 
     - role: "roles/centreon-config"
-      host_list:
-        - {
-          'host': 'test01',
-          'alias': 'Server teste 01',
-          'address': '127.0.0.1',
-          'template': 'generic-active-host-custom',
-          'instance': 'central',
-          'hostgroup': '',
-          'state': 'enabled' # enabled, disabled, absent
+    centreon_admin_password: "p4ssw0rd"
+    centreon_webapi_host: "http://127.0.0.1"
+    centreon_webapi_port: "80"
+    configuration:
+      cg:
+      - {
+        'name': 'testers',
+        'alias': 'Testers contacts'
         }
-        - {
-          'host': 'test02',
-          'alias': 'Server teste 02',
-          'address': '127.0.0.1',
-          'template': 'generic-active-host-custom',
-          'instance': 'central',
-          'hostgroup': '',
-          'notes': 'Test notes',
-          'snmp_community': 'public',
-          'snmp_version': '1',
-          'state': 'enabled' # enabled, disabled, absent
+      contacts:
+      - {
+        'name': 'Test contact One',
+        'alias': 'test01',
+        'email': 'test01@test.centreon.com',
+        'password': 'easypass',
+        'admin': '0',
+        'gui': '1',
+        'language': 'en_US',
+        'auth': 'local',
+        'state': 'enabled' # enabled, disabled, absent
         }
-        - {
-          'host': 'test03',
-          'alias': 'Server teste 03',
-          'address': '127.0.0.1',
-          'template': 'generic-active-host-custom',
-          'instance': 'central',
-          'hostgroup': '',
-          'state': 'absent' # enabled, disabled, absent
+      host:
+      - {
+        'name': 'test01',
+        'alias': 'Server teste 01',
+        'address': '127.0.0.1',
+        'template': 'generic-active-host-custom',
+        'instance': 'central',
+        'hostgroup': '',
+        'state': 'enabled' # enabled, disabled, absent
+      }
+      - {
+        'name': 'test02',
+        'alias': 'Server teste 02',
+        'address': '127.0.0.1',
+        'template': 'generic-active-host-custom',
+        'instance': 'central',
+        'hostgroup': '',
+        'notes': 'Test notes',
+        'snmp_community': 'public',
+        'snmp_version': '1',
+        'state': 'enabled' # enabled, disabled, absent
+      }
+      - {
+        'name': 'test03',
+        'alias': 'Server teste 03',
+        'address': '127.0.0.1',
+        'template': 'generic-active-host-custom',
+        'instance': 'central',
+        'hostgroup': '',
+        'state': 'absent' # enabled, disabled, absent
+      }
+      service:
+      - {
+        'host name': 'test01',
+        'description': 'cpu_snmp',
+        'template': '',
+        'state': 'enabled' # enabled, disabled, absent
         }
 
 - name: Centreon-Poller

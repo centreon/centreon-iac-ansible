@@ -1,0 +1,363 @@
+#!/usr/bin/env python
+#
+# wrapper.py
+#
+from sys import exit
+import json
+import requests
+import yaml
+
+URI = '{{ centreon_webapi_host }}:{{ centreon_webapi_port }}/centreon'
+API = URI + '/api/index.php?action=action&object=centreon_clapi'
+AUTH = URI + '/api/index.php?action=authenticate'
+
+mapobjects = {
+    'aclaction': {
+        'index': 'name',
+        'required': ['name', 'description']
+    },
+    'aclgroup': {
+        'index': 'name',
+        'required': ['name', 'alias', 'activate']
+    },
+    'aclmenu': {
+        'index': 'name',
+        'required': ['name', 'alias']
+    },
+    'aclresource': {
+        'index': 'name',
+        'required': ['name', 'alias']
+    },
+    'centbrokercfg': {
+        'index': 'name',
+        'required': ['name', 'brokercfg']
+    },
+    'command': {
+        'index': 'name',
+        'required': ['name', 'type', 'cmdline']
+    },
+    'contact': {
+        'index': 'name',
+        'required': [
+            'name', 'alias', 'email', 'password', 'admin',
+            'gui', 'language', 'auth_type'
+        ],
+        'state': 'custom'
+    },
+    'cg': {
+        'index': 'name',
+        'required': ['name', 'alias'],
+        'state': 'custom'
+    },
+    'dep': {
+        'index': 'name',
+        'required': ['name', 'description', 'type', 'parent']
+    },
+    'downtime': {
+        'index': 'name',
+        'required': ['name', 'description']
+    },
+    'enginecfg': {
+        'index': 'name',
+        'required': ['name', 'instance', 'description']
+    },
+    'host': {
+        'index': 'name',
+        'required': [
+            'name', 'alias', 'address', 'template', 'instance',
+            'hostgroup'
+        ],
+        'attrs': ['geo_coords', '2d_coords', '3d_coords', 'action_ur',
+                  'activate', 'active_checks_enabled', 'address', 'alias',
+                  'check_command', 'check_command_arguments', 'check_interval',
+                  'check_freshness', 'check_period',
+                  'contact_additive_inheritance', 'cg_additive_inheritance',
+                  'event_handler', 'event_handler_arguments',
+                  'event_handler_enabled', 'first_notification_delay',
+                  'flap_detection_enabled', 'flap_detection_options',
+                  'host_high_flap_threshold', 'host_low_flap_threshold',
+                  'icon_image', 'icon_image_alt',
+                  'max_check_attempts', 'notes', 'notes_url',
+                  'notifications_enabled', 'notification_interval',
+                  'notification_options', 'notification_period',
+                  'recovery_notification_delay', 'obsess_over_host',
+                  'passive_checks_enabled', 'process_perf_data',
+                  'retain_nonstatus_information', 'retain_status_information',
+                  'retry_check_interval', 'snmp_community', 'snmp_version',
+                  'stalking_options', 'statusmap_image',
+                  'host_notification_options', 'timezone']
+    },
+    'hg': {
+        'index': 'name',
+        'required': ['name', 'alias']
+    },
+    'instance': {
+        'index': 'name',
+        'required': ['name', 'address', 'ssh']
+    },
+    'ldap': {
+        'index': 'name',
+        'required': ['name', 'description']
+    },
+    'resourcecfg': {
+        'index': 'name',
+        'required': ['name', 'value', 'instance', 'description']
+    },
+    'stpl': {
+        'index': 'description',
+        'required': ['description', 'alias', 'template']
+    },
+    'service': {
+        'index': ['host name', 'description'],
+        'required': ['host name', 'description', 'template'],
+        'attrs': ['template', 'is_volatile',
+                  'check_period', 'check_command', 'check_command_arguments',
+                  'max_check_attempts', 'normal_check_interval',
+                  'retry_check_interval', 'active_checks_enabled',
+                  'passive_checks_enabled', 'notifications_enabled',
+                  'contact_additive_inheritance', 'cg_additive_inheritance',
+                  'notification_interval', 'notification_period',
+                  'notification_options', 'first_notification_delay',
+                  'recovery_notification_delay', 'obsess_over_service',
+                  'check_freshness', 'freshness_threshold',
+                  'event_handler_enabled', 'flap_detection_enabled',
+                  'retain_status_information', 'retain_nonstatus_information',
+                  'event_handler', 'event_handler_arguments', 'notes',
+                  'notes_url', 'action_url', 'icon_image', 'icon_image_alt',
+                  'comment', 'service_notification_options'],
+    },
+    'sg': {
+        'index': 'name',
+        'required': ['name', 'alias']
+    },
+    'sc': {
+        'index': 'name',
+        'required': ['name', 'description']
+    },
+    'tp': {
+        'index': 'name',
+        'required': ['name', 'alias']
+    },
+    'trap': {
+        'index': 'name',
+        'required': ['name', 'oid']
+    },
+    'vendor': {
+        'index': 'name',
+        'required': ['name', 'alias']
+    }
+}
+
+gettoken = requests.post(AUTH, data={
+    'username': 'admin',
+    'password': '{{ centreon_admin_password }}'
+})
+
+if gettoken.status_code == 200:
+    token = json.loads(gettoken.text)
+    header = {
+        'centreon-auth-token': token['authToken']
+    }
+else:
+    print('Error in get the token')
+    exit(1)
+
+
+def do_request(name='', action='', data=''):
+    try:
+        if data:
+            bodyData = {
+                'action': action,
+                'object': name,
+                'values': data
+            }
+        else:
+            bodyData = {
+                'action': action,
+                'object': name
+            }
+        req = requests.post(API, headers=header, json=bodyData)
+        if req.status_code == 200:
+            return json.loads(req.text)
+        else:
+            print('Error in get objects list')
+            print('Debug:')
+            print(req.text)
+            print(bodyData)
+            exit(1)
+    except ValueError:
+        print('Error in try post data')
+        exit(1)
+
+
+def apply_templates():
+    for host in do_request('host', 'show')['result']:
+        apply = do_request('host', 'applytpl', host['name'])
+        if not apply:
+            print('Error in try apply template')
+            break
+    return True
+
+
+def apply_instances():
+    for poller in do_request(action='pollerlist')['result']:
+        apply = do_request(action='applycfg', data=poller['poller_id'])
+        if not apply:
+            print('Error in try apply poller')
+            break
+    return True
+
+
+with open('/tmp/config.yml') as _f:
+    obj = yaml.load(_f.read())  # Parse yaml object
+for name in obj.keys():
+
+    # Verify if exists object
+    makeChanges = False
+    for item in obj[name]:
+        listobjects = do_request(name, 'show')['result']
+        if not isinstance(mapobjects[name]['index'], list):
+            if item[mapobjects[name]['index']] not in [
+                _o[mapobjects[name]['index']] for _o in listobjects
+            ]:
+                # not exist, add object
+                if item['state'] != 'absent':
+                    addObject = do_request(
+                        name,
+                        'add',
+                        ';'.join(
+                            [item[i] for i in mapobjects[name]['required']]
+                        )
+                    )
+                    if addObject:
+                        makeChanges = True
+                        print('New object %s added' % name)
+            else:
+                if 'state' in mapobjects[name].keys():
+                    if item['state'] == 'disabled':
+                        disable = do_request(name, 'disable', item[mapobjects[name]['index']])
+                        if disable:
+                            print('Object %s was disabled' % name)
+                    elif item['state'] == 'enabled':
+                        enable = do_request(name, 'enable', item[mapobjects[name]['index']])
+                        if enable:
+                            print('Object %s was enabled' % name)
+                else:
+                    rstate = [i['activate'] for i in listobjects if (
+                        i[mapobjects[name]['index']] == item[mapobjects[name]['index']]
+                    )][0]
+                    if item['state'] == 'disabled' and rstate == '1':
+                        # Disable object
+                        # Necessary here get attribute value to test the active
+                        # state of object (for now, confirm the status)
+                        disable = do_request(
+                            name,
+                            'setparam',
+                            '%s;%s;%s' % (
+                                item[mapobjects[name]['index']],
+                                'activate',
+                                '0'
+                            )
+                        )
+                        if disable:
+                            print('Object %s was disabled' % name)
+                if item['state'] == 'absent':
+                    # Remove object
+                    delete = do_request(
+                        name, 'del', item[mapobjects[name]['index']]
+                    )
+                    if delete:
+                        makeChanges = True
+                        print('Object %s deleted' % name)
+        else:
+            # make a list of array with values of index by pulled list
+            values = []
+            for s in listobjects:
+                _v = []
+                for i in mapobjects[name]['index']:
+                    _v.append(s[i])
+                values.append(_v)
+            # Now make a array with actual values from provider
+            actual = []
+            for i in mapobjects[name]['index']:
+                actual.append(item[i])
+            # compare array with the list of arrays
+            if actual not in values:
+                # not exist, add object
+                if item['state'] != 'absent':
+                    addObject = do_request(
+                        name,
+                        'add',
+                        ';'.join(
+                            [item[i] for i in mapobjects[name]['required']]
+                        )
+                    )
+                    if addObject:
+                        makeChanges = True
+                        print('New object %s added to %s' % (
+                            ';'.join(actual), name
+                        ))
+            else:
+                if item['state'] == 'disabled':
+                    # Disable object
+                    disable = do_request(
+                        name,
+                        'setparam',
+                        '%s;%s;%s' % (
+                            ';'.join(actual),
+                            'activate',
+                            '0'
+                        )
+                    )
+                    if disable:
+                        makeChanges = True
+                        print('Object %s->%s was disabled' % (
+                            name, ';'.join(actual)
+                        ))
+                elif item['state'] == 'absent':
+                    # Remove object
+                    delete = do_request(name, 'del', ';'.join(actual))
+                    if delete:
+                        makeChanges = True
+                        print('Object %s->%s deleted' % (
+                            name, ';'.join(actual))
+                        )
+
+        # Now, test parameters and do action based on result
+        if 'attrs' in mapobjects[name].keys() and item['state'] != 'absent':
+            for attr in item.keys():
+                if attr in mapobjects[name]['attrs']:
+                    #
+                    # Need a endpoint to get a actual list of attributes from
+                    # object
+                    # For now, always apply attributes
+                    #
+                    pushattr = do_request(
+                        name,
+                        'setparam',
+                        '%s;%s;%s' % (
+                            item[mapobjects[name]['index']] if (
+                                not isinstance(
+                                    mapobjects[name]['index'], list
+                                )
+                            ) else ';'.join(actual),
+                            attr,
+                            item[attr]
+                        )
+                    )
+                    if pushattr:
+                        makeChanges = True
+                        print('Set attribute *%s* to value "%s" in %s object %s' % (
+                                attr,
+                                item[attr],
+                                name,
+                                item[mapobjects[name]['index']] if (
+                                    not isinstance(
+                                        mapobjects[name]['index'], list
+                                    )
+                                ) else ';'.join(actual)
+                            )
+                        )
+    if makeChanges:
+        apply_templates()
+        apply_instances()

@@ -1,2 +1,0 @@
----
-  centreon_api: "/usr/share/centreon/bin/centreon -u admin -p {{ centreon_admin_password }}"

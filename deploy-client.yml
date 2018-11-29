@@ -1,35 +1,21 @@
 ---
 
-- name: Centreon-Web
-  hosts: centreon-web
+- name: Add monitor to Centreon
+  hosts: webserver
   remote_user: root
 
   roles:
-    - "roles/common"
-    - role: "roles/mariadb-server"
-      mysql_root_password: "p4ssw0rd"
-
-    - role: "roles/centreon-web"
-      php_timezone: "Europe/Paris"
-      mysql_hostname: "localhost"
-      mysql_port: "3306"
-      mysql_root_password: "p4ssw0rd"
-      mysql_centreon_db: "centreon"
-      mysql_centstorage_db: "centreon_storage"
-      mysql_centreon_username: "centreon"
-      mysql_centreon_password: "p4ssw0rd"
-      centreon_admin_password: "p4ssw0rd"
-      plugin_pack:
-        - "base-generic"
-        - "Linux SNMP"
-
-    - role: "roles/centreon-config"
-      contact_group:
+  - role: "roles/centreon-config"
+    centreon_admin_password: "p4ssw0rd"
+    centreon_webapi_host: "http://192.168.150.10"
+    centreon_webapi_port: "80"
+    configuration:
+        cg:
         - {
           'name': 'testers',
           'alias': 'Testers contacts'
           }
-      contact_list:
+        contacts:
         - {
           'name': 'Test contact One',
           'alias': 'test01',
@@ -41,9 +27,9 @@
           'auth': 'local',
           'state': 'enabled' # enabled, disabled, absent
           }
-      host_list:
+        host:
         - {
-          'host': 'test01',
+          'name': 'test01',
           'alias': 'Server teste 01',
           'address': '127.0.0.1',
           'template': 'generic-active-host-custom',
@@ -52,7 +38,7 @@
           'state': 'enabled' # enabled, disabled, absent
         }
         - {
-          'host': 'test02',
+          'name': 'test02',
           'alias': 'Server teste 02',
           'address': '127.0.0.1',
           'template': 'generic-active-host-custom',
@@ -64,7 +50,7 @@
           'state': 'enabled' # enabled, disabled, absent
         }
         - {
-          'host': 'test03',
+          'name': 'test03',
           'alias': 'Server teste 03',
           'address': '127.0.0.1',
           'template': 'generic-active-host-custom',
@@ -72,20 +58,10 @@
           'hostgroup': '',
           'state': 'absent' # enabled, disabled, absent
         }
-      service_list:
+        service:
         - {
-          'host': 'test01',
-          'service': 'cpu_snmp',
+          'host name': 'test01',
+          'description': 'cpu_snmp',
           'template': '',
           'state': 'enabled' # enabled, disabled, absent
           }
-
-
-
-- name: Centreon-Poller
-  hosts: centreon-poller
-  remote_user: root
-
-  roles:
-    - "roles/common"
-    - "roles/centreon-poller"

@@ -1,205 +1,28 @@
 ---
+  - name: add epel-release repository
+    yum:
+      name: epel-release
+      state: present
 
-  - name: Manage Contact
-    shell: |
-      LINE="$({{ centreon_api }} -o CONTACT -a SHOW | sed 1d | grep "{{ item.alias }}")"
-      if [ "$(echo $LINE | cut -d\; -f2)" = "{{ item.alias }}" ]; then
-        if [ "{{ item.state }}" == "absent" ]; then
-          {{ centreon_api }} -o CONTACT -a DEL -v "{{ item.name }}" \
-          && echo "Contact {{ item.name }} removed because state is absent"
-        fi
-      elif [ "{{ item.state }}" != "absent" ]; then
-        {{ centreon_api }} -o CONTACT -a ADD \
-        -v "{{ item.name }};{{ item.alias }};{{ item.email }};{{ item.password }};{{ item.admin }};{{ item.gui }};{{ item.language }};{{ item.auth }}" \
-        && echo "Add Contact {{ item.name }}"
-      fi
-      if [ "{{ item.state }}" != "absent" ]; then
-        {% for key, value in item.items() if key not in ['state'] %}
-          if ! [ "$({{ centreon_api }} -o CONTACT -a getparam -v "{{ item.name }};{{ key }}" | grep "{{ value }}")" ] && [ "{{ value }}" ]; then
-            {{ centreon_api }} -o CONTACT -a setparam -v "{{ item.alias }};{{ key }};{{ value }}" \
-            && echo "Set parameter {{ key }} to {{ value }}"
-          fi
-        {% endfor %}
-        if [ "{{ item.state }}" = "enabled" ] && [ "$(echo $LINE | cut -d\; -f5)" != "1" ]; then
-          {{ centreon_api }} -o CONTACT -a enable -v "{{ item.alias }}" \
-          && echo "Set state of CONTACT {{ item.alias }} to enable"
-        elif [ "{{ item.state }}" = "disabled" ] && [ "$(echo $LINE | cut -d\; -f5)" != "0" ]; then
-          {{ centreon_api }} -o CONTACT -a disable -v "{{ item.alias }}" \
-          && echo "Set state of CONTACT {{ item.alias }} to disable"
-        fi
-      fi
-    register: do_manage_contact
-    with_items: "{{ contact_list }}"
-    changed_when: do_manage_contact.stdout != ''
-    when: contact_list is defined
-    notify:
-        - apply pollers
+  - name: install requirements
+    yum:
+      name:
+        - python34-requests
+        - python34-PyYAML
+      state: latest
 
-  - name: Manage Host Group
-    shell: |
-      LINE="$({{ centreon_api }} -o HG -a show | sed 1d | grep "{{ item.name }}")"
-      if [ "$(echo $LINE | cut -d\; -f2)" = "{{ item.name }}" ]; then
-        if [ "{{ item.state }}" == "absent" ]; then
-          {{ centreon_api }} -o HG -a DEL -v "{{ item.name }}" \
-          && echo "Hostgroup {{ item.name }} removed because state is absent"
-        fi
-      elif [ "{{ item.state }}" != "absent" ]; then
-        {{ centreon_api }} -o HG -a ADD \
-        -v "{{ item.name }};{{ item.alias }}" \
-        && echo "Add hostgroup {{ item.name }}"
-      fi
-      if [ "{{ item.state }}" != "absent" ]; then
-        {% for key, value in item.items() if key not in ['state', 'members'] %}
-          if ! [ "$({{ centreon_api }} -o HG -a getparam -v "{{ item.name }};{{ key }}" | grep "{{ value }}")" ] && [ "{{ value }}" ]; then
-            {{ centreon_api }} -o HG -a setparam -v "{{ item.name }};{{ key }};{{ value }}" \
-            && echo "Set parameter {{ key }} to {{ value }}"
-          fi
-        {% endfor %}
-        if [ "{{ item.state }}" = "enabled" ] && [ "$(echo $LINE | cut -d\; -f5)" != "1" ]; then
-          {{ centreon_api }} -o HG -a setparam -v "{{ item.name }};activate;1" \
-          && echo "Set state of Hostgroup {{ item.name }} to enable"
-        elif [ "{{ item.state }}" = "disabled" ] && [ "$(echo $LINE | cut -d\; -f5)" != "0" ]; then
-          {{ centreon_api }} -o HG -a setparam -v "{{ item.name }};activate;0" \
-          && echo "Set state of Hostgroup {{ item.alias }} to disable"
-        fi
-        if [ "{{ item.members }}" ]; then
-          for member in $(echo '{{ item.members }}' | sed 's/|/ /g'); do
-            if ! [ "$({{ centreon_api }} -o HG -a getmember -v '{{ item.name }}' | grep '${member}')" ]; then
-              {{ centreon_api }} -o HG -a setmember -v '{{ item.name }};{{ item.members }}'
-            fi
-          done
-        fi
-      fi
-    register: do_manage_hg
-    with_items: "{{ hostgroup_list }}"
-    changed_when: do_manage_contact.stdout != ''
-    when: hostgroup_list is defined
-    notify:
-        - apply pollers
+  - name: Make wrapper file using template
+    template:
+      src: templates/wrapper.py.j2
+      dest: /tmp/wrapper.py
+      mode: 0755
 
-  - name: Manage Host
-    shell: |
-      LINE="$({{ centreon_api }} -o HOST -a show | sed 1d | grep "{{ item.host }}")"
-      if [ "$(echo $LINE | cut -d\; -f2)" = "{{ item.host }}" ]; then
-        if [ "{{ item.state }}" == "absent" ]; then
-          {{ centreon_api }} -o HOST -a DEL -v "{{ item.host }}" \
-          && echo "Host {{ item.host }} removed because state is absent"
-        fi
-      elif [ "{{ item.state }}" != "absent" ]; then
-        {{ centreon_api }} -o HOST -a ADD \
-        -v "{{ item.host }};{{ item.alias }};{{ item.address }};{{ item.template }};{{ item.instance }};" \
-        && echo "Add host {{ item.host }}"
-      fi
-      if [ "{{ item.state }}" != "absent" ]; then
-        {% for key, value in item.items() if key not in ['host', 'template', 'instance', 'state', 'hostgroup'] %}
-          if ! [ "$({{ centreon_api }} -o HOST -a getparam -v "{{ item.host }};{{ key }}" | grep "{{ value }}")" ] && [ "{{ value }}" ]; then
-            {{ centreon_api }} -o HOST -a setparam -v "{{ item.host }};{{ key }};{{ value }}" \
-            && echo "Set parameter {{ key }} to {{ value }}"
-          fi
-        {% endfor %}
-        if [ "{{ item.state }}" = "enabled" ] && [ "$(echo $LINE | cut -d\; -f5)" != "1" ]; then
-          {{ centreon_api }} -o HOST -a enable -v "{{ item.host }}" \
-          && echo "Set state of host {{ item.host }} to enable"
-        elif [ "{{ item.state }}" = "disabled" ] && [ "$(echo $LINE | cut -d\; -f5)" != "0" ]; then
-          {{ centreon_api }} -o HOST -a disable -v "{{ item.host }}" \
-          && echo "Set state of host {{ item.host }} to disable"
-        fi
-        {% if 'hostgroup' in item.items() %}
-        if ! [ "$({{ centreon_api }} -o HOST -a gethostgroup -v "{{ item.host }}" | grep "{{ item.hostgroup }}")" ] && [ "{{ item.hostgroup }}" ]; then
-          {{ centreon_api }} -o HOST -a sethostgroup -v "{{ item.host }};{{ item.hostgroup }}" \
-          && echo "Set group(s) to {{ item.hostgroup }} for host {{ item.host }}"
-        fi
-        {% endif %}
-        if ! [ "$({{ centreon_api }} -o HOST -a gettemplate -v "{{ item.host }}" | grep "{{ item.template }}")" ] && [ "{{ item.template }}" ]; then
-          {{ centreon_api }} -o HOST -a settemplate -v "{{ item.host }};{{ item.template }}" \
-          && echo "Set template(s) to {{ item.template }} for host {{ item.host }}"
-        fi
-        # {{ centreon_api }} -o HOST -a setinstance -v "{{ item.host }};{{ item.instance }}" \
-        # && echo "Set instance to {{ item.instance }} for host {{ item.host }}"
-      fi
-    register: do_manage_host
-    with_items: "{{ host_list }}"
-    changed_when: do_manage_host.stdout != ''
-    when: host_list is defined
-    notify:
-        - apply templates
-        - apply pollers
+  - name: Make config yaml file using template
+    template:
+      src: templates/config.yml.j2
+      dest: /tmp/config.yml
+      mode: 0644
 
-  - name: Manage Service Group
-    shell: |
-      LINE="$({{ centreon_api }} -o SG -a show | sed 1d | grep "{{ item.name }}")"
-      if [ "$(echo $LINE | cut -d\; -f2)" = "{{ item.name }}" ]; then
-        if [ "{{ item.state }}" == "absent" ]; then
-          {{ centreon_api }} -o SG -a DEL -v "{{ item.name }}" \
-          && echo "Servicegroup {{ item.name }} removed because state is absent"
-        fi
-      elif [ "{{ item.state }}" != "absent" ]; then
-        {{ centreon_api }} -o SG -a ADD \
-        -v "{{ item.name }};{{ item.alias }}" \
-        && echo "Add servicegroup {{ item.name }}"
-      fi
-      if [ "{{ item.state }}" != "absent" ]; then
-        {% for key, value in item.items() if key not in ['state', 'members'] %}
-          if ! [ "$({{ centreon_api }} -o SG -a getparam -v "{{ item.name }};{{ key }}" | grep "{{ value }}")" ] && [ "{{ value }}" ]; then
-            {{ centreon_api }} -o SG -a setparam -v "{{ item.name }};{{ key }};{{ value }}" \
-            && echo "Set parameter {{ key }} to {{ value }}"
-          fi
-        {% endfor %}
-        if [ "{{ item.state }}" = "enabled" ] && [ "$(echo $LINE | cut -d\; -f5)" != "1" ]; then
-          {{ centreon_api }} -o SG -a setparam -v "{{ item.name }};activate;1" \
-          && echo "Set state of Servicegroup {{ item.name }} to enable"
-        elif [ "{{ item.state }}" = "disabled" ] && [ "$(echo $LINE | cut -d\; -f5)" != "0" ]; then
-          {{ centreon_api }} -o SG -a setparam -v "{{ item.name }};activate;0" \
-          && echo "Set state of Servicegroup {{ item.alias }} to disable"
-        fi
-        if [ "{{ item.services }}" ]; then
-          for service in $(echo '{{ item.services }}' | sed 's/|/ /g'); do
-            if ! [ "$({{ centreon_api }} -o HG -a getservice -v '{{ item.name }}' | grep '${service}')" ]; then
-              {{ centreon_api }} -o HG -a setservice -v '{{ item.name }};{{ item.services }}'
-            fi
-          done
-        fi
-      fi
-    register: do_manage_sg
-    with_items: "{{ servicegroup_list }}"
-    changed_when: do_manage_sg.stdout != ''
-    when: servicegroup_list is defined
-    notify:
-        - apply templates
-        - apply pollers
-
-  - name: Manage Service
-    shell: |
-      LINE="$({{ centreon_api }} -o SERVICE -a show | sed 1d | grep "{{ item.name }}")"
-      if [ "$(echo $LINE | cut -d\; -f2)" = "{{ item.name }}" ]; then
-        if [ "{{ item.state }}" == "absent" ]; then
-          {{ centreon_api }} -o SERVICE -a DEL -v "{{ item.name }}" \
-          && echo "Service {{ item.name }} removed because state is absent"
-        fi
-      elif [ "{{ item.state }}" != "absent" ]; then
-        {{ centreon_api }} -o SERVICE -a ADD \
-        -v "{{ item.host }};{{ item.name }};{{ item.template }}" \
-        && echo "Add service {{ item.name }}"
-      fi
-      if [ "{{ item.state }}" != "absent" ]; then
-        {% for key, value in item.items() if key not in ['name', 'host', 'template', 'state'] %}
-          if ! [ "$({{ centreon_api }} -o SERVICE -a getparam -v "{{ item.name }};{{ key }}" | grep "{{ value }}")" ] && [ "{{ value }}" ]; then
-            {{ centreon_api }} -o SERVICE -a setparam -v "{{ item.host }};{{ item.name }};{{ key }};{{ value }}" \
-            && echo "Set parameter {{ key }} to {{ value }}"
-          fi
-        {% endfor %}
-        if [ "{{ item.state }}" = "enabled" ] && [ "$(echo $LINE | cut -d\; -f5)" != "1" ]; then
-          {{ centreon_api }} -o SERVICE -a setparam -v "{{ item.host }};{{ item.name }};activate;1" \
-          && echo "Set state of Service {{ item.name }} to enable"
-        elif [ "{{ item.state }}" = "disabled" ] && [ "$(echo $LINE | cut -d\; -f5)" != "0" ]; then
-          {{ centreon_api }} -o SERVICE -a setparam -v "{{ item.host }};{{ item.name }};activate;0" \
-          && echo "Set state of Service {{ item.name }} to disable"
-        fi
-      fi
-    register: do_manage_service
-    with_items: "{{ service_list }}"
-    changed_when: do_manage_service.stdout != ''
-    when: service_list is defined
-    notify:
-        - apply templates
-        - apply pollers
+  - name: Apply configuration using wrapper
+    shell: /usr/bin/python3 /tmp/wrapper.py
+    register: wrapperoutput
