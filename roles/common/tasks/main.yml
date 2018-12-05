@@ -16,6 +16,11 @@
       state: disabled
     when: selinux_config.stat.exists == True
 
+  - name: Add firewalld package
+    yum:
+      name: firewalld
+      state: present
+
   - name: add rpm repository
     yum:
       name: http://yum.centreon.com/standard/18.10/el7/stable/noarch/RPMS/centreon-release-18.10-2.el7.centos.noarch.rpm
