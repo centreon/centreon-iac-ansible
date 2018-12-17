@@ -113,9 +113,11 @@ Timezone to configuration of PHP
 - `mysql_centreon_username`: (string) Username used by Centreon
 - `mysql_centreon_password`: (string) Password user used by Centreon
 - `centreon_admin_password`: (string) Password used by user admin (main administrator user)
+- `repository`: (string) Centreon repository RPM package URL (Default: `http://yum.centreon.com/standard/18.10/el7/stable/noarch/RPMS/centreon-release-18.10-2.el7.centos.noarch.rpm`)
 - `plugin_pack`: (array)
 
 A array of plugins pack to install
+
 Valid values:
 
 - base-generic
