@@ -3,37 +3,36 @@
 Table of Contents
 
 - [Overview](#overview)
-  * [Ansible Playbooks](#ansible-playbooks)
-  * [Roles](#roles)
+  - [Ansible Playbooks](#ansible-playbooks)
+  - [Roles](#roles)
 - [Versions](#versions)
-  * [18.10.0](#18.10.0)
+  - [18.10.0](#18.10.0)
 - [Requirements](#requirements)
-  * [Operating systems](#operating-systems)
-  * [Control Machine](#control-machine)
+  - [Operating systems](#operating-systems)
+  - [Control Machine](#control-machine)
 - [Installation](#installation)
 - [Role Variables](#role-variables)
-  * [Default Values](#default-values)
+  - [Default Values](#default-values)
 - [Examples](#examples)
-  * [Installation](#simple-installation)
-  * [Using Vagrant](docs/vagrant.md)
-  * [Using AWS Amazon](#amazon-aws)
-  * [Using Google Cloud](#google-cloud)
-  * [Using Microsoft Azure](#microsoft-azure)
-  * [Using Digital Ocean](#digital-ocean)
-  * [Using Vultr](#vultr)
+  - [Installation](#simple-installation)
+  - [Using Vagrant](docs/vagrant.md)
+  - [Using AWS Amazon](#amazon-aws)
+  - [Using Google Cloud](#google-cloud)
+  - [Using Microsoft Azure](#microsoft-azure)
+  - [Using Digital Ocean](#digital-ocean)
+  - [Using Vultr](#vultr)
 - [Screencasts](#screencasts)
 - [License](LICENSE)
 
-# Overview
+## Overview
 
-
-## Ansible Playbooks
+### Ansible Playbooks
 
 Playbooks express configurations, deployment, and orchestration in Ansible. The Playbook format is YAML. Each Playbook maps a group of hosts to a set of roles. Each role is represented by calls to Ansible tasks.
 
-See more information: https://docs.ansible.com/ansible/latest/user_guide/playbooks.html
+See more information: [](https://docs.ansible.com/ansible/latest/user_guide/playbooks.html)
 
-## Roles
+### Roles
 
 Centreon Web Playbook with MySQL Server
 
@@ -56,19 +55,19 @@ Centreon Poller Playbook
 - Set authorized previously created keys (copy from Centreon-Web)
 - Enable and try start centengine service
 
-# Versions
+## Versions
 
-## 18.10.0
+### 18.10.0
 
 Version with synchronized functions for version 18.10.0 of the Centreon
 
-# Requirements
+## Requirements
 
-## Operating systems
+### Operating systems
 
 This role will work on the following operating systems:
 
- * Red Hat / Centos
+- Red Hat / Centos
 
 Control Machine:
 
@@ -77,11 +76,11 @@ Control Machine:
 
 Install last version of Ansible
 
-https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-the-control-machine
+[](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-the-control-machine)
 
-# Installation
+## Installation
 
-## Using GIT
+### Using GIT
 
 ```bash
 cd ~/work-dir
@@ -89,35 +88,36 @@ git clone https://github.com/centreon/centreon-iac-ansible.git
 cd centreon-iac-ansible
 ```
 
-## Using Ansible Galaxy
+### Using Ansible Galaxy
 
 Comming soon
 
-# Role Variables
+## Role Variables
 
 Task: mariadb-server
 
-*	`mysql_root_password`: (string) Password to use with user root
+- `mysql_root_password`: (string) Password to use with user root
 
 Task: centreon-web
 
-* `php_timezone`: (string)
+- `php_timezone`: (string)
 
 Timezone to configuration of PHP
-http://php.net/manual/en/timezones.php
+[](http://php.net/manual/en/timezones.php)
 
-* `mysql_hostname`: (string) Hostname or IP to use for connection with Mysql database
-* `mysql_port`: (string) Port number to use for connection with Mysql database
-* `mysql_root_password`: (string) Password used by user root (you can use variable from mariadb-server task)
-* `mysql_centreon_db`: (string) Database name used by Centreon
-* `mysql_centstorage_db`: (string) Database name used by Centreon Storage
-* `mysql_centreon_username`: (string) Username used by Centreon
-* `mysql_centreon_password`: (string) Password user used by Centreon
-* `centreon_admin_password`: (string) Password used by user admin (main administrator user)
-* `plugin_pack`: (array)
+- `mysql_hostname`: (string) Hostname or IP to use for connection with Mysql database
+- `mysql_port`: (string) Port number to use for connection with Mysql database
+- `mysql_root_password`: (string) Password used by user root (you can use variable from mariadb-server task)
+- `mysql_centreon_db`: (string) Database name used by Centreon
+- `mysql_centstorage_db`: (string) Database name used by Centreon Storage
+- `mysql_centreon_username`: (string) Username used by Centreon
+- `mysql_centreon_password`: (string) Password user used by Centreon
+- `centreon_admin_password`: (string) Password used by user admin (main administrator user)
+- `plugin_pack`: (array)
 
 A array of plugins pack to install
 Valid values:
+
 - base-generic
 - Centreon
 - Centreon DB
@@ -139,8 +139,9 @@ Valid values:
 - Alcatel OXE
 - Apache Server
 
-## Default values
-```
+### Default values
+
+```yaml
   php_timezone: "Europe/Paris"
   mysql_centreon_hostname: "localhost"
   mysql_centstorage_hostname: "localhost"
@@ -153,9 +154,9 @@ Valid values:
   centreon_admin_password: "p4ssw0rd"
 ```
 
-# Examples
+## Examples
 
-## Simple Installation
+### Simple Installation
 
 Simple Installation using a Centos clean install and configure a new Host with Centreon
 
@@ -165,13 +166,13 @@ You need a installation of CentOS 7 with SSH server enabled
 
 on the control machine, export the ssh key to new host:
 
-```
+```bash
 ssh-copy-id root@[remote-ip-or-hostname]
 ```
 
 Create a new file of hosts with the configuration to connect in the remote host, example:
 
-```
+```bash
 vi hosts.deploy
 [centreon-server]
 centreon-web ansible_port=22 ansible_host=[remote-ip-or-hostname]
@@ -179,7 +180,7 @@ centreon-web ansible_port=22 ansible_host=[remote-ip-or-hostname]
 
 Create a new file with format YAML to deploy components for installation of Centreon Web
 
-```
+```bash
 vi centreon-deploy.yml
 ---
 - name: Centreon-Web
@@ -208,7 +209,6 @@ vi centreon-deploy.yml
 
 Now, you can apply the deploy in remote server, use these command:
 
-```
+```bash
 ansible-playbook -i hosts.deploy centreon-deploy.yml
 ```
-
