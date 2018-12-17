@@ -30,7 +30,7 @@ Table of Contents
 
 Playbooks express configurations, deployment, and orchestration in Ansible. The Playbook format is YAML. Each Playbook maps a group of hosts to a set of roles. Each role is represented by calls to Ansible tasks.
 
-See more information: [](https://docs.ansible.com/ansible/latest/user_guide/playbooks.html)
+See more information: [Playbooks](https://docs.ansible.com/ansible/latest/user_guide/playbooks.html)
 
 ### Roles
 
@@ -76,7 +76,7 @@ Control Machine:
 
 Install last version of Ansible
 
-[](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-the-control-machine)
+[Installation Control Machine](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-the-control-machine)
 
 ## Installation
 
@@ -103,7 +103,7 @@ Task: centreon-web
 - `php_timezone`: (string)
 
 Timezone to configuration of PHP
-[](http://php.net/manual/en/timezones.php)
+[PHP Timezones](http://php.net/manual/en/timezones.php)
 
 - `mysql_hostname`: (string) Hostname or IP to use for connection with Mysql database
 - `mysql_port`: (string) Port number to use for connection with Mysql database
