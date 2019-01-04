@@ -26,6 +26,12 @@ Table of Contents
 
 ## Overview
 
+This playbook is a set of scripts and code that assist in automating the installation process and initial setup of the Centreon environment. With Ansible, you have the ability to customize basic system settings and remotely deploy the entire environment.
+
+Everything is based on a single configuration file, containing basic database access and configuration information.
+
+It is also possible to implement and automate the installation of Plugins of the [Plugins Pack](https://documentation.centreon.com/docs/centreon/en/latest/quick_start/basic_plugins.html)
+
 ### Ansible Playbooks
 
 Playbooks express configurations, deployment, and orchestration in Ansible. The Playbook format is YAML. Each Playbook maps a group of hosts to a set of roles. Each role is represented by calls to Ansible tasks.

@@ -133,3 +133,4 @@
     shell: |
       /usr/bin/python /tmp/do_install_basic_plugins.py && \
       rm -rf /tmp/do_install_basic_plugins.py
+
