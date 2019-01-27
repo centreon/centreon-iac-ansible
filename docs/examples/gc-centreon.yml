@@ -1,0 +1,57 @@
+- name: Create instance(s)
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars:
+    service_account_email: XXXXXXXXX-compute@developer.gserviceaccount.com
+    credentials_file: centreon-XXXXXXXXX.json
+    project_id: centreon-XXXXXXX
+    machine_type: f1-micro
+    image: centos-7
+
+  tasks:
+    - name: Launch instances
+      gce:
+        instance_names: lab
+        machine_type: "{{ machine_type }}"
+        image: "{{ image }}"
+        service_account_email: "{{ service_account_email }}"
+        credentials_file: "{{ credentials_file }}"
+        project_id: "{{ project_id }}"
+        metadata: '{"ssh-keys":"root:ssh-rsa XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx user@hostname.example"}'
+        tags: http-server
+      register: gce
+
+    - name: Wait for SSH to come up
+      wait_for: host={{ item.public_ip }} port=22 delay=10 timeout=60
+      loop: "{{ gce.instance_data }}"
+
+    - name: Add host to groupname
+      add_host: hostname={{ item.public_ip }} groupname=new_instances
+      loop: "{{ gce.instance_data }}"
+
+- name: Manage new instances
+  hosts: new_instances
+  connection: ssh
+  become: True
+  roles:
+    - "roles/common"
+    - role: "roles/mariadb-server"
+      mysql_root_password: "p4ssw0rd"
+    - role: "roles/centreon-web"
+      php_timezone: "Europe/Paris"
+      mysql_hostname: "localhost"
+      mysql_port: "3306"
+      mysql_root_password: "p4ssw0rd"
+      mysql_centreon_db: "centreon"
+      mysql_centstorage_db: "centreon_storage"
+      mysql_centreon_username: "centreon"
+      mysql_centreon_password: "p4ssw0rd"
+      centreon_admin_password: "p4ssw0rd"
+      plugin_pack:
+        - "base-generic"
+        - "Linux SNMP"
+
+
+

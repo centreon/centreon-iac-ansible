@@ -1,0 +1,53 @@
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  tasks:
+
+    - name: Provision a set of instances
+      ec2:
+         aws_access_key: "XXXXXXXXXXXXXXXXXX"
+         aws_secret_key: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+         key_name: lgcosta
+         instance_type: t2.micro
+         image: "ami-e0eac385"
+         region: us-east-2
+         group: ansible-lab
+         wait: true
+         exact_count: 1
+         count_tag:
+            Name: Centreon
+         instance_tags:
+            Name: Centreon
+      register: ec2
+
+    - name: Wait for SSH to come up
+      wait_for: host={{ item.public_ip }} port=22 delay=10 timeout=60
+      loop: "{{ ec2.instances }}"
+
+    - name: Add all instance public IPs to host group
+      add_host: hostname={{ item.public_ip }} groups=ec2hosts ansible_ssh_private_key_file=~/ssh/Amazon-gugabsd/lgcosta.pem
+      loop: "{{ ec2.instances }}"
+
+- name: Manage new instances
+  hosts: ec2hosts
+  user: centos
+  connection: ssh
+  become: True
+  roles:
+    - "roles/common"
+    - role: "roles/mariadb-server"
+      mysql_root_password: "centreon"
+    - role: "roles/centreon-web"
+      php_timezone: "Europe/Paris"
+      mysql_hostname: "localhost"
+      mysql_port: "3306"
+      mysql_root_password: "centreon"
+      mysql_centreon_db: "centreon"
+      mysql_centstorage_db: "centreon_storage"
+      mysql_centreon_username: "centreon"
+      mysql_centreon_password: "centreon"
+      centreon_admin_password: "centreon"
+      plugin_pack:
+        - "base-generic"
+        - "Linux SNMP"
