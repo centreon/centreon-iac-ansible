@@ -150,7 +150,7 @@ sudo yum install -y python-requests python2-libcloud
 
 ### Centreon Deploy
 
-Now prepare the environment with the Anson module for the deploy of the Centeron, for this, we will use the repository of the implementation module of Centeron through Git.
+Now prepare the environment with the Ansible module for the deploy of the **Centreon**, for this, we will use the repository of the implementation module of **Centreon** through Git.
 
 ```bash
 git clone https://github.com/centreon/centreon-iac-ansible.git
@@ -159,7 +159,7 @@ cd centreon-iac-ansible
 
 You will now need to prepare your deploy yaml file and the access key provided by Google in json format, as per the instructions in this site.
 
-Here, I'm going to use the sample deploy file provided in the Centreon module repository:
+Here, I'm going to use the sample deploy file provided in the **Centreon** module repository:
 
 ```bash
 cp docs/examples/gc-centreon.yml .
@@ -200,7 +200,7 @@ Use the public key in the new instances by adding in the block on the file `gc-c
 metadata: '{"ssh-keys":"admin: ... add your public ssh key here ... "}'
 ```
 
-With this and with your proper settings of deploy of the Centeron, just run the deploy command of Ansible
+With this and with your proper settings of deploy of the **Centreon**, just run the deploy command of Ansible
 
 ```bash
 ansible-playbook gc-centreon.yml
