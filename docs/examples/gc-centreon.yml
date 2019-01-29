@@ -19,7 +19,7 @@
         service_account_email: "{{ service_account_email }}"
         credentials_file: "{{ credentials_file }}"
         project_id: "{{ project_id }}"
-        metadata: '{"ssh-keys":"root:ssh-rsa XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx user@hostname.example"}'
+        metadata: '{"ssh-keys":"admin:ssh-rsa XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx user@hostname.example"}'
         tags: http-server
       register: gce
 
@@ -34,6 +34,7 @@
 - name: Manage new instances
   hosts: new_instances
   connection: ssh
+  user: admin
   become: True
   roles:
     - "roles/common"
