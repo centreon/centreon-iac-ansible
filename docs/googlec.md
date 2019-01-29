@@ -7,7 +7,7 @@ Table of Contents
 - [Installation](#usage)
   - [Ubuntu](#using-ubuntu-linux)
   - [Centos/RedHat](#using-centos-redhat)
-- [Ansible](#installation-ansible)
+- [Ansible](#installation-of-ansible)
 - [Centreon Deploy](#centreon-deploy)
 - [Screencast](#screencast)
 
@@ -77,7 +77,7 @@ apt install -y sudo curl less neovim dialog libterm-readline-gnu-perl
 
 ### Using Centos/Redhat Linux
 
-If you already have a system ready to use Ansible, skip to the [Ansible installation step](#Installation_of_Ansible).
+If you already have a system ready to use Ansible, skip to the [Ansible installation step](#installation-of-ansible).
 
 #### With Vagrant
 
@@ -179,7 +179,8 @@ Edit the file `gc-centreon.yml` with your values from Google Compute:
 Set the `machine_type` according to your needs and save the file.
 
 Now you will need to create or use your public ssh key to use in Google Compute instances, if you do not already have it, use the command below to create and get the public key
-![SSH keygen](docs/images/sshkeygen.gif)
+
+![SSH keygen](images/sshkeygen.gif)
 
 #### Tip
 
