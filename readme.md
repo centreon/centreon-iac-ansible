@@ -6,7 +6,7 @@ Table of Contents
   - [Ansible Playbooks](#ansible-playbooks)
   - [Roles](#roles)
 - [Versions](#versions)
-  - [18.10.0](#18.10.0)
+  - [19.10.0](#19.10.0)
 - [Requirements](#requirements)
   - [Operating systems](#operating-systems)
   - [Control Machine](#control-machine)
@@ -63,9 +63,9 @@ Centreon Poller Playbook
 
 ## Versions
 
-### 18.10.0
+### 19.10.0
 
-Version with synchronized functions for version 18.10.0 of the Centreon
+Version with synchronized functions for version 19.10.0 of the Centreon
 
 ## Requirements
 

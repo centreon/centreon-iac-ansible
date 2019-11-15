@@ -1,5 +1,5 @@
 ---
-  - name: install SCL package required by PHP 7.1
+  - name: install SCL package required by PHP 7.2
     yum:
       name:
         - centos-release-scl
@@ -8,7 +8,6 @@
   - name: install centreon web and requirements
     yum:
       name:
-        - centreon-base-config-centreon-engine
         - centreon
       state: latest
 
@@ -16,15 +15,15 @@
     blockinfile:
       create: yes
       marker: "; {mark} ANSIBLE MANAGED BLOCK"
-      path: /etc/opt/rh/rh-php71/php.d/php-timezone.ini
+      path: /etc/opt/rh/rh-php72/php.d/php-timezone.ini
       content: |
         date.timezone = {{ php_timezone }}
 
-  - name: Check PHP 7.1 FPM service
-    service: name=rh-php71-php-fpm enabled=yes state=started
+  - name: Check PHP 7.2 FPM service
+    service: name=rh-php72-php-fpm enabled=yes state=started
 
   - name: Check httpd service
-    service: name=httpd enabled=yes state=started
+    service: name=httpd24-httpd enabled=yes state=started
 
   - name: 'Create Centreon user home directory'
     file:
@@ -113,7 +112,7 @@
 
   - name: Install Plugin Manager extension
     shell: |
-      /opt/rh/rh-php71/root/bin/php /tmp/install_modules.php && \
+      /opt/rh/rh-php72/root/bin/php /tmp/install_modules.php && \
       rm -rf /tmp/install_modules.php
 
   - name: Python packages necessaries
