@@ -23,5 +23,5 @@
 
   - name: add rpm repository
     yum:
-      name: "{{ repository | default('http://yum.centreon.com/standard/19.10/el7/stable/noarch/RPMS/centreon-release-19.10-1.el7.centos.noarch.rpm') }}"
+      name: "{{ repository | default('http://yum.centreon.com/standard/20.04/el7/stable/noarch/RPMS/centreon-release-20.04-1.el7.centos.noarch.rpm') }}"
       state: present
