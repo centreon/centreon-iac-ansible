@@ -78,8 +78,8 @@
   - import_tasks: do_config.yml
     when: not controller_file.stat.exists and controller_file.stat.exists is defined
 
-  - name: centcore service
-    service: name=centcore enabled=yes state=started
+  - name: gorgoned service
+    service: name=gorgoned enabled=yes state=started
   - name: centengine service
     service: name=centengine enabled=yes state=started
   - name: cbd service

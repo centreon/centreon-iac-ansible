@@ -4,5 +4,5 @@
     listen: "reload systemctl daemons"
     
   - name: restart httpd
-    service: name=httpd state=restarted
-    listen: "restart httpd"
+    service: name=httpd24-httpd state=restarted
+    listen: "restart httpd24-httpd"
